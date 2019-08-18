@@ -11,6 +11,11 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::namespace('Auth')->group(function () {
+    Route::get('login', 'LoginController@showLoginForm');
+    Route::post('login', 'LoginController@login')->name('auth.login');
 });
+
+Route::get('/', function () {
+    return view('home/index');
+})->name('home');
