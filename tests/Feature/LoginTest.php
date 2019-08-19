@@ -59,4 +59,12 @@ class LoginTest extends TestCase
         $response->assertRedirect('/login');
         $this->assertGuest();
     }
+
+    public function test_user_cannot_access_home_when_not_authenticated()
+    {
+        $this->withExceptionHandling();
+        $response = $this->get(route('home'));
+
+        $response->assertRedirect('/login');
+    }
 }
