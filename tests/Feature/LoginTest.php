@@ -45,6 +45,7 @@ class LoginTest extends TestCase
 
     public function test_fail_with_incorrect_password()
     {
+        $this->withExceptionHandling();
         $user = factory(User::class)->create([
             'password' => bcrypt('password')
         ]);
@@ -54,6 +55,7 @@ class LoginTest extends TestCase
             'password' => 'buzzword'
         ]);
 
+        # LoginControllerにsendFailedLoginResponseを記述しないと、homeにリダイレクトされてしまう。ブラウザからやると、この記述がなくても動作する。原因を調べる。
         $response->assertRedirect('/login');
         $this->assertGuest();
     }

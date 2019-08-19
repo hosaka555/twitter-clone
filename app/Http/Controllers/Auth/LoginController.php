@@ -47,4 +47,12 @@ class LoginController extends Controller
                 $this->username() => Lang::get('auth.failed'),
             ]);
     }
+
+    protected function validateLogin(Request $request)
+    {
+        $this->validate($request, [
+            $this->username() => 'required|string',
+            'password' => 'required|string|min:6',
+        ]);
+    }
 }
