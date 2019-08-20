@@ -21,7 +21,7 @@ Route::namespace('Auth')->group(function () {
 
 Route::get('/', function () {
     return view('index');
-});
+})->name('root');
 
 Route::get('/home', ['middleware' => 'auth',function () {
     return view('home/index');
