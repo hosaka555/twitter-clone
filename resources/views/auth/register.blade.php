@@ -31,14 +31,18 @@ $title = "新規登録"
 
       @if ($errors->any())
       <ul>
-          @foreach ($errors->all() as $error)
-              <li>{{ $error }}</li>
-          @endforeach
+        @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
       </ul>
       @endif
 
       <input type="submit" class="form__button" value="新規登録">
     </form>
+
+    <p>
+      <a href="{{ route('auth.login') }}">すでにアカウントをお持ちの方はこちら</a>
+    </p>
   </div>
 </div>
 @endsection

@@ -29,6 +29,10 @@ $title = "Login"
 
       <input type="submit" class="form__button" value="ログイン">
     </form>
+
+    <p>
+      <a href="{{ route('auth.register') }}">アカウントをお持ちでない方はこちら</a>
+    </p>
   </div>
 </div>
 @endsection
