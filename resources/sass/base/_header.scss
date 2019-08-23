@@ -1,0 +1,28 @@
+.header-container {
+  height: 50px;
+  width: 100%;
+  position: fixed;
+  background: skyblue;
+
+  .header-menu {
+    &__item {
+     list-style: none;
+     display: inline;
+    }
+
+    &__link {
+      color: white;
+
+      &-logout {
+        float: right;
+        margin-right: 30px;
+
+        &::after {
+          display: block;
+          content: '';
+          clear: both;
+        }
+      }
+    }
+  }
+}
