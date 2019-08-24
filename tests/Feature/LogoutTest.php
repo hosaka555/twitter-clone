@@ -17,7 +17,7 @@ class LogoutTest extends TestCase
         $response = $this->actingAs($user)->get('/home');
         $response->assertStatus(200)->assertViewIs('home.index');
 
-        $response = $this->actingAs($user)->delete(route('api.logout'));
+        $response = $this->actingAs($user)->post(route('auth.logout'));
         $response->assertStatus(302)->assertRedirect(route('root'));
         $this->assertGuest();
     }
