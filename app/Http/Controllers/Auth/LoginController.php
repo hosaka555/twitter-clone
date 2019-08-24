@@ -36,7 +36,7 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest')->except('logout');
+        $this->middleware('guest')->except(['logout']);
     }
 
     protected function sendFailedLoginResponse(Request $request)
@@ -54,5 +54,24 @@ class LoginController extends Controller
             $this->username() => 'required|string',
             'password' => 'required|string|min:6',
         ]);
+    }
+
+    protected function sendLoginResponse(Request $request)
+    {
+
+        $request->session()->regenerate();
+        $credentials = request(['email', 'password']);
+
+        if (! $token = auth("api")->attempt($credentials)) {
+            $this->incrementLoginAttempts($request);
+            session()->invalidate();
+            return $this->sendFailedLoginResponse($request);
+        }
+
+        $request->session()->put('jwt-token', $token);
+        $this->clearLoginAttempts($request);
+
+        return $this->authenticated($request, $this->guard()->user())
+            ?: redirect()->intended($this->redirectPath());
     }
 }

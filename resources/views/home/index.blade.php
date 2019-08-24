@@ -15,7 +15,9 @@
 
 <body>
   <div id="app"></div>
-
+  <div id="token" style="display: none;">
+    {{ Session::get('jwt-token') }}
+  </div>
   <script src="{{ asset('js/app.js') }}" defer></script>
 </body>
 

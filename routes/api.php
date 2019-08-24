@@ -13,6 +13,6 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('web')->namespace('Api')->prefix("api")->group(function(){
-    Route::delete('/logout','AuthController@logout')->name('api.logout');
+Route::middleware('api')->namespace('Api')->middleware('auth:api')->group(function(){
+    Route::get('me', 'AuthController@me');
 });
