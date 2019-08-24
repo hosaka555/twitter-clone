@@ -1780,27 +1780,41 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     this.setToken();
   },
   methods: {
+    postTest1: function postTest1() {
+      var _this = this;
+
+      console.log(this.token);
+      axios.post("/api/test1", "", {
+        headers: {
+          Authorization: "Bearer ".concat(this.token)
+        }
+      }).then(function (response) {
+        console.log("Success");
+        console.log(response);
+      })["catch"](function (error) {
+        _this.logout();
+      });
+    },
     setToken: function () {
       var _setToken = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-        var _this = this;
+        var _this2 = this;
 
-        var token;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                token = document.getElementById("token").textContent.replace(/^\s*/, "");
+                this.token = document.getElementById("token").textContent.replace(/^\s*/, "");
                 _context.next = 3;
                 return axios.get("/api/me", {
                   headers: {
-                    Authorization: "Bearer ".concat(token)
+                    Authorization: "Bearer ".concat(this.token)
                   }
                 }).then(function (response) {
-                  _this.token = response.data;
+                  console.log(response.data);
                 })["catch"](function (error) {
-                  _this.logout();
+                  _this2.logout();
                 });
 
               case 3:
@@ -1808,7 +1822,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 return _context.stop();
             }
           }
-        }, _callee);
+        }, _callee, this);
       }));
 
       function setToken() {
