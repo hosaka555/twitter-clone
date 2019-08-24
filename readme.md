@@ -15,4 +15,6 @@ systemctl start nginx
 systemctl start php-fpm
 ```
 
-
+php artisan cache:clear
+php artisan config:clear
+php artisan jwt:secret
