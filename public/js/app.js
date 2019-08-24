@@ -1770,64 +1770,75 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      token: ""
+    };
+  },
+  mounted: function mounted() {
+    this.setToken();
+  },
   methods: {
-    logout: function () {
-      var _logout = _asyncToGenerator(
+    setToken: function () {
+      var _setToken = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-        var token, params, config;
+        var _this = this;
+
+        var token;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                token = '';
+                token = document.getElementById("token").textContent.replace(/^\s*/, "");
                 _context.next = 3;
-                return axios.get('/api/csrf').then(function (response) {
-                  token = response.data;
-                  console.log(response.data);
+                return axios.get("/api/me", {
+                  headers: {
+                    Authorization: "Bearer ".concat(token)
+                  }
+                }).then(function (response) {
+                  _this.token = response.data;
+                })["catch"](function (error) {
+                  _this.logout();
                 });
 
               case 3:
-                // VueからCSRF認証を行えるようにする
-                // sessionを空にする？
-                // ログアウトした後はページをリロードする
-                console.log("SUBMIT");
-                params = new FormData(); // params.append('name', this.name);
-                // let token = document.head.querySelector('meta[name="csrf-token"]').content;
-
-                console.log("token");
-                console.log(token);
-                params.set('_token', token); // console.log(params);
-
-                config = {
-                  headers: {
-                    'content-type': 'multipart/form-data'
-                  }
-                }; // axios.post('/api/logout',params,config).then(response => {
-
-                axios.post('http://localhost:8000/api/logout', params, config).then(function (response) {
-                  // axios.delete('/api/logout',params,config).then(response => {
-                  console.log("loggedout");
-                  window.location.reload();
-                })["catch"](function (error) {
-                  console.log(error);
-                });
-
-              case 10:
               case "end":
                 return _context.stop();
             }
           }
         }, _callee);
+      }));
+
+      function setToken() {
+        return _setToken.apply(this, arguments);
+      }
+
+      return setToken;
+    }(),
+    logout: function () {
+      var _logout = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return axios.post("/logout").then(function (response) {
+                  console.log("LOGOUT");
+                  window.location.reload();
+                })["catch"](function (error) {
+                  console.log(error);
+                });
+
+              case 2:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
       }));
 
       function logout() {
@@ -37935,8 +37946,6 @@ var render = function() {
         _vm._m(2),
         _vm._v(" "),
         _c("li", { staticClass: "header-menu__item" }, [
-          _vm._m(3),
-          _vm._v(" "),
           _c(
             "div",
             { staticClass: "header-menu__link header-menu__link-logout" },
@@ -37989,20 +37998,6 @@ var staticRenderFns = [
       _c("a", { staticClass: "header-menu__link", attrs: { href: "" } }, [
         _vm._v("ツイートの作成")
       ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("form", { attrs: { method: "delete", action: "/api/logout" } }, [
-      _c("input", { attrs: { type: "hidden", name: "_token", value: "" } }),
-      _vm._v(" "),
-      _c("input", {
-        attrs: { type: "hidden", name: "_method", value: "delete" }
-      }),
-      _vm._v(" "),
-      _c("input", { attrs: { type: "submit", value: "submit" } })
     ])
   }
 ]
