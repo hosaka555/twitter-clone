@@ -16,6 +16,7 @@
 <body>
   <div id="app"></div>
   <div id="token" style="display: none;">
+    <!-- ここでSessionStoreからjwt-tokenの値を取得して表示 -->
     {{ Session::get('jwt-token') }}
   </div>
   <script src="{{ asset('js/app.js') }}" defer></script>

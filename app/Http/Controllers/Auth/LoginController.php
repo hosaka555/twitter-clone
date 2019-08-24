@@ -62,13 +62,13 @@ class LoginController extends Controller
         $request->session()->regenerate();
         $credentials = request(['email', 'password']);
 
-        if (! $token = auth("api")->attempt($credentials)) {
+        if (!$token = auth("api")->attempt($credentials)) {
             $this->incrementLoginAttempts($request);
             session()->invalidate();
             return $this->sendFailedLoginResponse($request);
         }
 
-        $request->session()->put('jwt-token', $token);
+        $request->session()->put('jwt-token', $token); // jwt-tokenをsessionStoreに保存する
         $this->clearLoginAttempts($request);
 
         return $this->authenticated($request, $this->guard()->user())

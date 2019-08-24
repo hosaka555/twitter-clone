@@ -32,27 +32,11 @@ export default {
     this.setToken();
   },
   methods: {
-    postTest1() {
-      console.log(this.token);
-
-      axios
-        .post("/api/test1", "", {
-          headers: {
-            Authorization: `Bearer ${this.token}`
-          }
-        })
-        .then(response => {
-          console.log("Success");
-          console.log(response);
-        })
-        .catch(error => {
-          this.logout();
-        });
-    },
     async setToken() {
       this.token = document
         .getElementById("token")
-        .textContent.replace(/^\s*/, "");
+        .textContent.replace(/^\s*/, ""); // index.blade.phpからjwt-tokenを取得
+      console.log(this.token);
 
       await axios
         .get("/api/me", {
@@ -64,7 +48,8 @@ export default {
           console.log(response.data);
         })
         .catch(error => {
-          this.logout();
+          console.log(error)
+          this.logout(); // authに失敗した場合はログアウトを実行する。
         });
     },
     async logout() {

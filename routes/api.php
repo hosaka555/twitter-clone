@@ -13,6 +13,6 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('api')->namespace('Api')->middleware('auth:api')->group(function(){
+Route::middleware('api')->namespace('Api')->middleware('auth:api')->group(function () {
     Route::get('me', 'AuthController@me');
 });

@@ -1805,7 +1805,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                this.token = document.getElementById("token").textContent.replace(/^\s*/, "");
+                this.token = document.getElementById("token").textContent.replace(/^\s*/, ""); // index.blade.phpからjwt-tokenを取得
+
                 _context.next = 3;
                 return axios.get("/api/me", {
                   headers: {
@@ -1814,7 +1815,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 }).then(function (response) {
                   console.log(response.data);
                 })["catch"](function (error) {
-                  _this2.logout();
+                  _this2.logout(); // authに失敗した場合はログアウトを実行する。
+
                 });
 
               case 3:
