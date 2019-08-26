@@ -15,4 +15,8 @@ use Illuminate\Http\Request;
 
 Route::middleware('api')->namespace('Api')->middleware('auth:api')->group(function () {
     Route::get('me', 'AuthController@me');
+
+    Route::prefix("users/{user_id}")->group(function () {
+        Route::post("tweets/tweet","TweetController@create")->name("api.post_tweet");
+    });
 });
