@@ -1780,26 +1780,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     this.setToken();
   },
   methods: {
-    postTest1: function postTest1() {
-      var _this = this;
-
-      console.log(this.token);
-      axios.post("/api/test1", "", {
-        headers: {
-          Authorization: "Bearer ".concat(this.token)
-        }
-      }).then(function (response) {
-        console.log("Success");
-        console.log(response);
-      })["catch"](function (error) {
-        _this.logout();
-      });
-    },
     setToken: function () {
       var _setToken = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-        var _this2 = this;
+        var _this = this;
 
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
           while (1) {
@@ -1807,7 +1792,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 this.token = document.getElementById("token").textContent.replace(/^\s*/, ""); // index.blade.phpからjwt-tokenを取得
 
-                _context.next = 3;
+                console.log(this.token);
+                _context.next = 4;
                 return axios.get("/api/me", {
                   headers: {
                     Authorization: "Bearer ".concat(this.token)
@@ -1815,11 +1801,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 }).then(function (response) {
                   console.log(response.data);
                 })["catch"](function (error) {
-                  _this2.logout(); // authに失敗した場合はログアウトを実行する。
+                  console.log(error);
+
+                  _this.logout(); // authに失敗した場合はログアウトを実行する。
 
                 });
 
-              case 3:
+              case 4:
               case "end":
                 return _context.stop();
             }
