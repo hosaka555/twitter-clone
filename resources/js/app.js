@@ -21,8 +21,9 @@ import './bootstrap';
 
 // Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 import Vue from 'vue';
-import router from './router';
-import App from './App.vue';
+import router from '@/router';
+import App from '@/App.vue';
+import store from '@/store';
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -33,7 +34,6 @@ import App from './App.vue';
 const app = new Vue({
   el: '#app',
   router,
+  store,
   render: h => h(App),
-  // components: { App },
-  // template: '<App />'
 });

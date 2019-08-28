@@ -31,7 +31,6 @@ class PostTweetRequest extends FormRequest
 
     /**
      * [override] バリデーション失敗時ハンドリング
-     ＊
      * @param Validator $validator
      * @throw HttpResponseException
      * @see FormRequest::failedValidation()

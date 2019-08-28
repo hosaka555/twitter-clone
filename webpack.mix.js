@@ -1,5 +1,15 @@
 const mix = require('laravel-mix');
 
+mix.webpackConfig({
+  resolve: {
+    extensions: ['.js', '.vue', '.json'],
+    alias: {
+      'vue$': 'vue/dist/vue.esm.js',
+      '@': __dirname + '/resources/js'
+    }
+  },
+});
+
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -12,4 +22,5 @@ const mix = require('laravel-mix');
  */
 
 mix.js('resources/js/app.js', 'public/js')
-    .sass('resources/sass/app.scss', 'public/css').version();
+  .copy('resources/img', 'public/img')
+  .sass('resources/sass/app.scss', 'public/css').version();

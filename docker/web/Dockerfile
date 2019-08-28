@@ -79,6 +79,8 @@ COPY conf/server.conf /etc/nginx/conf.d/
 
 RUN  mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.org
 COPY conf/nginx.conf        /etc/nginx/
+RUN systemctl enable nginx.service
+RUN systemctl enable php-fpm.service
 
 CMD ["/sbin/init"]
 

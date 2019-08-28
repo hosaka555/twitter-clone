@@ -11025,6 +11025,10 @@ template {
   display: none;
 }
 
+body {
+  padding-top: 50px;
+}
+
 .form-wrapper .form__input {
   display: block;
 }
@@ -11055,5 +11059,45 @@ template {
   display: block;
   content: "";
   clear: both;
+}
+
+.icon {
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+}
+
+.newTweet-container {
+  background: white;
+  height: 220px;
+  max-width: 1110px;
+  padding: 15px 0;
+}
+
+.newTweet__input {
+  height: 150px;
+  width: 80%;
+  max-width: 900px;
+  padding: 15px;
+  vertical-align: top;
+}
+
+.newTweet-bottomBox .bottomBox-rightSide {
+  text-align: right;
+  width: 94%;
+  margin-top: 10px;
+}
+
+.newTweet-bottomBox .bottomBox-rightSide__count {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.newTweet-bottomBox .bottomBox-rightSide__button {
+  display: inline-block;
+}
+
+.newTweet-bottomBox .bottomBox-rightSide .countover {
+  color: red;
 }
 

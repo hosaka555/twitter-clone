@@ -2,6 +2,7 @@ version: '3'
 services:
   web:
     build: ./docker/web
+    container_name: web
     ports:
       - "8000:80"
     volumes:
@@ -12,6 +13,7 @@ services:
       - db
   db:
     build: ./docker/db
+    container_name: db
     ports:
       - 3366:3306
     restart: always
@@ -24,6 +26,7 @@ services:
       - db-data:/var/lib/mysql
   s3:
     image: minio/minio
+    container_name: s3
     ports:
       - "9001:9000"
     volumes:

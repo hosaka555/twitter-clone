@@ -27,3 +27,7 @@ Route::get('/', function () {
 Route::get('/home', ['middleware' => 'auth',function () {
     return view('home/index');
 }])->name('home');
+
+Route::get('/{any?}',function () {
+    return view('home/index');
+})->where('any','.+')->middleware('web');

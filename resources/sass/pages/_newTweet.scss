@@ -1,0 +1,37 @@
+.newTweet {
+  &-container {
+    background: white;
+    height: 220px;
+    max-width: 1110px;
+    padding: 15px 0;
+  }
+
+  &__input {
+    height: 150px;
+    width: 80%;
+    max-width: 900px;
+    padding: 15px;
+    vertical-align: top;
+  }
+
+  &-bottomBox {
+    & .bottomBox-rightSide {
+      text-align: right;
+      width: 94%;
+      margin-top: 10px;
+
+      &__count {
+        display: inline-block;
+        margin-right: 10px;
+      }
+
+      &__button {
+        display: inline-block;
+      }
+
+      & .countover {
+        color: red;
+      }
+    }
+  }
+}
