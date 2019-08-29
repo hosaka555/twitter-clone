@@ -18,5 +18,7 @@ Route::middleware('auth:api')->namespace('Api')->group(function () {
 
     Route::prefix("users/{account_id}")->group(function () {
         Route::post("tweets/tweet","TweetController@create")->name("api.post_tweet");
+
+        Route::get("tweets","TweetController@index")->name("api.get_tweets");
     });
 });

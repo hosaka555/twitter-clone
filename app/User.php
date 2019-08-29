@@ -40,10 +40,19 @@ class User extends Authenticatable implements JWTSubject
 
     public function getJWTIdentifier()
     {
-      return $this->getKey();
+        return $this->getKey();
     }
     public function getJWTCustomClaims()
     {
-      return [];
+        return [];
+    }
+
+    public function tweets(int $query = 0)
+    {
+        if ($query) {
+            return $this->hasMany('App\Tweet'); // Relationを書く
+        }
+
+        return $this->hasMany('App\Tweet');
     }
 }

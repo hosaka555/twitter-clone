@@ -4,13 +4,10 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\User;
 
 class RegisterTest extends TestCase
 {
-    use RefreshDatabase;
-
     public function test_return_response_success()
     {
         $response = $this->get('/signup');
