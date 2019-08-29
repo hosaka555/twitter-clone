@@ -1,17 +1,37 @@
-import { async } from '@/services/http';
+import { http, async } from '@/services/http';
 import router from '@/router';
 
-const state = {};
+const state = {
+  home: {},
+  profile: {}
+};
 
-const getters = {};
+const getters = {
+  home: state => state.home,
+};
 
-const mutations = {};
+const mutations = {
+  setTweet(state, { page, tweets }) {
+    Object.keys(state).map((key) => {
+      if (key === page) {
+        state['home'] = tweets;
+      }
+    });
+  },
+};
 
 const actions = {
   async postTweet(context, { url, data, redirectToName }) {
     const successCB = async response => await router.push({ name: redirectToName });
     const errorCB = error => console.log(error);
     await async.post(url, data, successCB, errorCB);
+  },
+
+  getTweets(context, { url, page }) {
+    const successCB = (response) => context.commit('setTweet', { page: page, tweets: JSON.parse(response.data) });
+    const errorCB = (error) => console.log(error);
+
+    http.get(url, successCB, errorCB);
   }
 };
 

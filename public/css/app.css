@@ -11067,6 +11067,24 @@ body {
   height: 150px;
 }
 
+.tweet-container {
+  height: 150px;
+  width: 700px;
+  background: white;
+  margin-bottom: 15px;
+  border: solid 1px #f2f2f2;
+  padding: 10px;
+}
+
+.tweet-container__profileIcon {
+  width: 100px;
+  height: 100px;
+}
+
+.tweet-body {
+  display: inline-block;
+}
+
 .newTweet-container {
   background: white;
   height: 220px;

@@ -1,11 +1,17 @@
 <template>
   <div>
-    <Header />
-    <main>
-      <div class="container">
-        <RouterView />
-      </div>
-    </main>
+    <div v-if="isReady">
+      <Header />
+      <main>
+        <div class="container">
+          <RouterView />
+        </div>
+      </main>
+    </div>
+    <div v-else style="    text-align: center;">
+      <!-- Loading -->
+      <img src="img/loading.gif">
+    </div>
   </div>
 </template>
 
@@ -15,6 +21,11 @@ import Header from "@/components/Header";
 export default {
   components: {
     Header
+  },
+  computed: {
+    isReady(){
+      return !!this.$store.getters["user/me"];
+    }
   },
   mounted() {
     this.setToken();

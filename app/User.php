@@ -53,6 +53,6 @@ class User extends Authenticatable implements JWTSubject
             return $this->hasMany('App\Tweet'); // Relationを書く
         }
 
-        return $this->hasMany('App\Tweet');
+        return $this->hasMany('App\Tweet')->orderBy('created_at',"desc");
     }
 }
