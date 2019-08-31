@@ -1,6 +1,7 @@
 <?php
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
+
 use App\User;
 use Illuminate\Support\Str;
 use Faker\Generator as Faker;
@@ -24,4 +25,16 @@ $factory->define(User::class, function (Faker $faker) {
         'password' => bcrypt('password'), // password
         // 'remember_token' => Str::random(10),
     ];
+});
+
+$factory->defineAs(User::class, 'general', function () use ($factory) {
+    $user = $factory->raw(User::class);
+
+    return array_merge(
+        $user,
+        [
+            'account_id' => "general_account",
+            "email" => "general@example.com"
+        ]
+    );
 });

@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use App\User;
+use App\Profile;
 
 class RegisterTest extends TestCase
 {
@@ -15,21 +16,25 @@ class RegisterTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_can_signup()
+    public function test_can_signup_with_profile()
     {
         $user = factory(User::class)->make(['password' => "password"]);
+        $profile = factory(Profile::class)->make(["introduction" => '']);
 
         $response = $this->post(route('auth.register', [
             'account_id' => $user->account_id,
             'email' => $user->email,
             'password' => $user->password,
-            'password_confirmation' => $user->password
+            'password_confirmation' => $user->password,
+            'username' => $profile->username
         ]));
 
         $this->assertDatabaseHas('users', [
             'account_id' => $user->account_id,
             'email' => $user->email,
         ]);
+
+        $this->assertDatabaseHas('profiles', ["username" => $profile->username]);
 
         $response->assertStatus(302)->assertRedirect(route('home'));
 
@@ -52,12 +57,14 @@ class RegisterTest extends TestCase
         $this->get('/signup');
 
         $user = factory(User::class)->create(['password' => "password"]);
+        $profile = factory(Profile::class)->make(["introduction" => '']);
 
         $response = $this->post(route('auth.register', [
             'account_id' => $user->account_id,
             'email' => "original@test.com",
             'password' => "foobar",
-            'password_confirmation' => "foobar"
+            'password_confirmation' => "foobar",
+            'username' => $profile->username
         ]));
 
         $response->assertStatus(302)->assertRedirect('/signup');
@@ -70,12 +77,14 @@ class RegisterTest extends TestCase
         $this->get('/signup');
 
         $user = factory(User::class)->create(['password' => "password"]);
+        $profile = factory(Profile::class)->make(["introduction" => '']);
 
         $response = $this->post(route('auth.register', [
             'account_id' => "original_id",
             'email' => $user->email,
             'password' => "foobar",
-            'password_confirmation' => "foobar"
+            'password_confirmation' => "foobar",
+            'username' => $profile->username
         ]));
 
         $response->assertStatus(302)->assertRedirect('/signup');
@@ -88,6 +97,29 @@ class RegisterTest extends TestCase
         $this->get('/signup');
 
         $user = factory(User::class)->make(['password' => "pass"]);
+        $profile = factory(Profile::class)->make(["introduction" => '']);
+
+        $response = $this->post(route('auth.register', [
+            'account_id' => $user->account_id,
+            'email' => $user->email,
+            'password' => $user->password,
+            'password_confirmation' => $user->password, 'username' => $profile->username
+        ]));
+
+        $response->assertStatus(302)->assertRedirect('/signup');
+        $errors = session('errors');
+        $response->assertSessionHasErrors();
+        $this->assertEquals('The password must be at least 6 characters.', $errors->get('password')[0]);
+        $this->assertGuest();
+    }
+
+
+    public function test_cannot_signup_without_username()
+    {
+        $this->withExceptionHandling();
+        $this->get('/signup');
+
+        $user = factory(User::class)->make();
 
         $response = $this->post(route('auth.register', [
             'account_id' => $user->account_id,
@@ -97,6 +129,10 @@ class RegisterTest extends TestCase
         ]));
 
         $response->assertStatus(302)->assertRedirect('/signup');
+        $errors = session('errors');
+        $response->assertSessionHasErrors();
+        $this->assertEquals('The username field is required.', $errors->get('username')[0]);
+
         $this->assertGuest();
     }
 }

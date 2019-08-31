@@ -1,11 +1,12 @@
 <?php
+
 namespace App\Http\Requests\Api;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class PostTweetRequest extends FormRequest
+class PostProfileImageRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +26,8 @@ class PostTweetRequest extends FormRequest
     public function rules()
     {
         return [
-            "message" => "required | max:140"
+            'header_icon' => 'file|mimes:jpg,jpeg,png',
+            'profile_icon' => 'file|mimes:jpg,jpeg,png'
         ];
     }
 
@@ -35,12 +37,12 @@ class PostTweetRequest extends FormRequest
      * @throw HttpResponseException
      * @see FormRequest::failedValidation()
      */
-    protected function failedValidation( Validator $validator )
+    protected function failedValidation(Validator $validator)
     {
         $response['errors']  = $validator->errors()->toArray();
 
         throw new HttpResponseException(
-            response()->json( $response, 422 )
+            response()->json($response, 422)
         );
     }
 }

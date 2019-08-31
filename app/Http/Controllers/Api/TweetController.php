@@ -15,21 +15,21 @@ class TweetController extends Controller
     public function index(Request $request)
     {
         $q = $request->query();
-        if(!$q){
+        if (!$q) {
             $q["include_relations"] = 0;
         }
 
-        DB::enableQueryLog();
         $tweets = Auth::user($q["include_relations"])->tweets->toJson();
-        // eval(\Psy\sh());
-        return response()->json($data = $tweets,$status = 200);
+
+        return response()->json($tweets, 200);
     }
 
     public function create(PostTweetRequest $request)
     {
-        $tweet = new Tweet($request->request->all());
+        $tweet_attr = ["message" => $request->message];
+        $tweet = new Tweet($tweet_attr);
         Auth::user()->tweets()->save($tweet);
 
-        return response()->json(200);
+        return response()->json([], 200);
     }
 }

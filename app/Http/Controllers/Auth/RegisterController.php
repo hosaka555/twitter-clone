@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\Profile;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -51,9 +52,10 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'account_id' => ['required', 'string', 'max:255','unique:users'],
+            'account_id' => ['required', 'string', 'max:60', 'unique:users'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
+            'username' => ['required', 'string', 'max:60']
         ]);
     }
 
@@ -65,12 +67,14 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        // eval(\Psy\sh());
-        return User::create([
+        $user =  User::create([
             'account_id' => $data['account_id'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+
+        $user->profile()->save(new Profile(['username' => $data['username']]));
+        return $user;
     }
 
     /**
@@ -96,6 +100,6 @@ class RegisterController extends Controller
         $request->session()->put('jwt-token', $token); // jwt-tokenをsessionStoreに保存する
 
         return $this->registered($request, $user)
-                        ?: redirect($this->redirectPath());
+            ?: redirect($this->redirectPath());
     }
 }

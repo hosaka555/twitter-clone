@@ -17,7 +17,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'account_id', 'email', 'password',
+        'account_id', 'email', 'password','profile'
     ];
 
     /**
@@ -54,5 +54,10 @@ class User extends Authenticatable implements JWTSubject
         }
 
         return $this->hasMany('App\Tweet')->orderBy('created_at',"desc");
+    }
+
+    public function profile()
+    {
+        return $this->hasOne('App\Profile');
     }
 }
