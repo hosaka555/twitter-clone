@@ -11,6 +11,10 @@ services:
     privileged: true
     depends_on:
       - db
+      - s3
+    links:
+      - s3 # minioと接続するために、minioのコンテナー名を指定することで名前解決する
+
   db:
     build: ./docker/db
     container_name: db
@@ -27,8 +31,9 @@ services:
   s3:
     image: minio/minio
     container_name: s3
+    hostname: s3
     ports:
-      - "9001:9000"
+      - "9000:9000"
     volumes:
       - ./docker/minio/data:/data
     command: server /data
@@ -39,3 +44,10 @@ volumes:
   db-data:
     driver: local
 
+# networks:
+#   bridge2:
+#     driver: bridge
+#     ipam:
+#       driver: default
+#       config:
+#         - subnet: 172.16.238.0/24
