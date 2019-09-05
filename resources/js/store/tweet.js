@@ -8,13 +8,14 @@ const state = {
 
 const getters = {
   home: state => state.home,
+  profile: state => state.profile,
 };
 
 const mutations = {
   setTweet(state, { page, tweets }) {
     Object.keys(state).map((key) => {
       if (key === page) {
-        state['home'] = tweets;
+        state[page] = tweets;
       }
     });
   },
@@ -41,4 +42,4 @@ export default {
   getters,
   mutations,
   actions
-};;
+};

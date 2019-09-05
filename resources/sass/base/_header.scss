@@ -4,6 +4,7 @@
   position: fixed;
   top: 0;
   background: skyblue;
+  z-index: 999;
 
   .header-menu {
     &__item {

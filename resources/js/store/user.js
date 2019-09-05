@@ -34,8 +34,28 @@ const actions = {
     console.log("Finitsh set token.\n" + token);
   },
   async me(context) {
-    const successCB = (response) => context.commit('setUser', response.data);
-    const errorCB = (error) => this.dispatch('user/logout');
+    const successCB = (response) => {
+      let user = { account_id: '', email: '', };
+      let profile = { username: '', profile_icon: '', introduction: '', header_icon: '' };
+
+      const headerIconStorage = window.localStorage.getItem('header_icon') || "";
+      if (headerIconStorage) {
+        profile.header_icon = headerIconStorage;
+        profile.introduction = window.localStorage.getItem('introduction');
+      }
+
+      Object.keys(response.data).map((key) => {
+        if (['username', 'profile_icon'].includes(key)) {
+          profile[key] = response.data[key];
+        } else {
+          user[key] = response.data[key];
+        }
+      });
+
+      context.commit('setUser', user);
+      context.commit('profile/setProfile', { profile: profile }, { root: true });
+    };
+    const errorCB = () => this.dispatch('user/logout');
 
     await async.get('/api/me', successCB, errorCB);
   },
@@ -49,6 +69,8 @@ const actions = {
     const afterCB = () => {
       console.log("Vuex CLEAR");
       context.commit('clearVuex');
+      localStorage.removeItem('header_icon');
+      localStorage.removeItem('introduction');
       window.location.href = "/login";
     };
 

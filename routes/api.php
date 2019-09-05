@@ -23,7 +23,7 @@ Route::middleware('auth:api')->namespace('Api')->group(function () {
 
        Route::get("/edit","ProfileController@edit")->name("api.edit_profile");
 
-        Route::put("/","ProfileController@update")->name("api.update_profile");
+        Route::post("/edit","ProfileController@update")->name("api.update_profile");
 
         Route::prefix("tweets")->group(function () {
             Route::post("tweet", "TweetController@create")->name("api.post_tweet");

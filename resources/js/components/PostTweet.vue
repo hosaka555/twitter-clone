@@ -2,7 +2,7 @@
   <div>
     <h1>New Tweet</h1>
     <div class="newTweet-container">
-      <ProfileIcon />
+      <ProfileIcon :user-icon="getAuthUserIcon()"/>
       <textarea class="newTweet__input" placeholder="いまどうしている？" v-model="message" />
       <div class="newTweet-bottomBox">
         <div class="bottomBox-rightSide">
@@ -52,6 +52,9 @@ export default {
 
         this.isProcessing = false;
       }
+    },
+    getAuthUserIcon() {
+      return this.$store.getters['profile/profile_icon'];
     }
   }
 };

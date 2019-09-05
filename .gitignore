@@ -13,3 +13,4 @@ yarn-error.log
 gomi
 docker/minio/data/.minio.sys/buckets/
 docker/minio/data/data/
+storage/debugbar/

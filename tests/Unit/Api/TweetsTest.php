@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\User;
 use App\Tweet;
+use App\Profile;
 
 class TweetsTest extends TestCase
 {
@@ -32,6 +33,33 @@ class TweetsTest extends TestCase
 
         $lastTweet = $user->tweets->last();
 
-        $this->assertSame($tweet->message,$lastTweet->message);
+        $this->assertSame($tweet->message, $lastTweet->message);
+    }
+
+    public function test_can_get_profile_icon_from_property()
+    {
+        $user = tap(factory(User::class)->create(), function ($user) {
+            $customImage = "http://localhost/img/profile/custom_profile.png";
+            $profile = factory(Profile::class)->make(["profile_icon" => $customImage]);
+            $user->profile()->save($profile);
+            $tweet = factory(Tweet::class)->make(["message" => "This is first message"]);
+            $user->tweets()->save($tweet);
+        });
+
+        $tweet = Tweet::first();
+        $this->assertSame($user->profile->profile_icon, $tweet->profile_icon);
+    }
+
+    public function test_can_get_username_from_property()
+    {
+        $user = tap(factory(User::class)->create(), function ($user) {
+            $profile = factory(Profile::class)->make();
+            $user->profile()->save($profile);
+            $tweet = factory(Tweet::class)->make(["message" => "This is first message"]);
+            $user->tweets()->save($tweet);
+        });
+
+        $tweet = Tweet::first();
+        $this->assertSame($user->profile->username, $tweet->username);
     }
 }

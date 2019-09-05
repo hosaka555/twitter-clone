@@ -3,20 +3,23 @@
     <nav class="header-menu">
       <ul>
         <li class="header-menu__item">
-          <a href class="header-menu__link">ユーザー一覧</a>
+          <router-link class="header-menu__link" to="/home">HOME</router-link>
         </li>
+
         <li class="header-menu__item">
-          <a href class="header-menu__link">プロフィール</a>
+          <a href class="header-menu__link">ユーザー一覧</a>
         </li>
         <li class="header-menu__item">
           <router-link
             class="header-menu__link"
-            :to="{ name: 'newTweet', params: { account_id: 'user@example.com'} }"
-          >ツイートの作成</router-link>
+            :to="{ name: 'profile', params: { account_id: this.$store.getters['user/me'].account_id} }"
+          >プロフィール</router-link>
         </li>
-
         <li class="header-menu__item">
-          <router-link class="header-menu__link" to="/home">HOME</router-link>
+          <router-link
+            class="header-menu__link"
+            :to="{ name: 'newTweet', params: { account_id: this.$store.getters['user/me'].account_id} }"
+          >ツイートの作成</router-link>
         </li>
 
         <li class="header-menu__item">

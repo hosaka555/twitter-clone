@@ -1,0 +1,101 @@
+@mixin icon-settings {
+  position: absolute;
+  transform: translateY(-50%) translateX(-50%);
+  height: 40px !important;
+  width: 40px !important;
+}
+
+.editProfile {
+  &-container {
+  }
+
+  &-headerIconBox {
+    position: relative;
+    text-align: center;
+
+    & input,
+    button {
+      display: none;
+    }
+
+    &::after {
+      display: block;
+      content: "";
+      clear: both;
+    }
+  }
+
+  &-profileIconBox {
+    position: relative;
+    text-align: center;
+
+    & input,
+    button {
+      display: none;
+    }
+
+    &::after {
+      display: block;
+      content: "";
+      clear: both;
+    }
+  }
+
+  &__icon {
+    &--headerIcon {
+      @include icon-settings;
+      top: 30%;
+    }
+
+    &--profileIcon {
+      @include icon-settings;
+      top: 43%;
+    }
+
+    &--plus {
+      left: 60%;
+    }
+
+    &--delete {
+      left: 40%;
+    }
+  }
+
+  &__image {
+    width: 100%;
+    height: 300px;
+    margin-bottom: 30px;
+    background: white;
+
+    &--profileIcon {
+      border-radius: 50%;
+      width: 150px;
+      height: 150px;
+      background: white;
+      border: 1px black solid;
+      display: inline-block;
+    }
+  }
+
+  &-inputArea {
+    display: block;
+    margin-top: 50px;
+
+    & label {
+      margin-bottom: 15px;
+      width: 100%;
+    }
+  }
+
+  &__input {
+    width: 100%;
+
+    &--introduction {
+      height: 150px;
+    }
+  }
+
+  &__button {
+    margin: 30px 0 150px 0;
+  }
+}

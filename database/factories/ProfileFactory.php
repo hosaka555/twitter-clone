@@ -9,7 +9,7 @@ $factory->define(Profile::class, function (Faker $faker) {
     return [
         "username" => "ユーザーネームさんです",
         "introduction" => "自己紹介です。なかなかうまくいきません...",
-        "header_icon" => "",
-        "profile_icon" => ""
+        "header_icon" => null,
+        "profile_icon" => null
     ];
 });

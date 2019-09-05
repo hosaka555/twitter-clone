@@ -7,6 +7,9 @@
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
+// Font Awesome
+@import "node_modules/font-awesome-scss/scss/font-awesome.scss";
+
 // Normalize
 @import 'base/normalize';
 
@@ -16,7 +19,11 @@
 // Header
 @import 'base/header';
 
+// parts
 @import 'parts/icon';
 @import 'parts/tweet';
 
+// pages
 @import 'pages/newTweet';
+@import 'pages/profile';
+@import 'pages/editProfile';

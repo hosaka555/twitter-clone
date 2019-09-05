@@ -10,6 +10,7 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use App\Profile;
 
 class TweetTest extends TestCase
 {
@@ -18,7 +19,7 @@ class TweetTest extends TestCase
     public function test_user_can_post_tweet()
     {
         $user = factory(User::class)->create();
-        $tweet = factory(Tweet::class)->make();
+        $tweet = factory(Tweet::class,"test")->make();
 
         $response = $this->actingAs($user)->post(route("api.post_tweet", ["account_id" => $user->account_id]), [
             "message" => $tweet->message,
@@ -47,6 +48,8 @@ class TweetTest extends TestCase
     public function test_return_json_with_my_tweets()
     {
         $user = factory(User::class)->create();
+        $profile = factory(Profile::class)->make();
+        $user->profile()->save($profile);
 
         for ($i = 0; $i < 2; $i++) {
             $tweet = factory(Tweet::class)->make(["message" => "This is $i message"]);

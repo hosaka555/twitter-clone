@@ -15,8 +15,9 @@ class ProfileController extends Controller
 {
     public function index($account_id)
     {
-        $profile = User::where('account_id', $account_id)->first()->profile->toJson();
+        $profile = User::where('account_id', $account_id)->first()->profile->toArray();
 
+        $profile = array_merge($profile, ["account_id" => $account_id]);
         return response()->json($profile, 200);
     }
 
@@ -32,18 +33,18 @@ class ProfileController extends Controller
         $headerIconImage = new Image($request->header_icon);
         $profileIconImage = new Image($request->profile_icon);
 
-        $headerImagePath = Storage::cloud()->putFileAs('images/headerIcon', $request->header_icon, $headerIconImage->filename, 'public');
-        $profileImagePath = Storage::cloud()->putFileAs('images/profileIcon', $request->profile_icon, $profileIconImage->filename, 'public');
+        if ($headerIconImage->filename) {
+            Storage::cloud()->putFileAs('images/headerIcon', $request->header_icon, $headerIconImage->filename, 'public');
+        }
+
+        if ($profileIconImage->filename) {
+            Storage::cloud()->putFileAs('images/profileIcon', $request->profile_icon, $profileIconImage->filename, 'public');
+        }
 
         DB::beginTransaction();
         try {
-            $profile_attr = [
-                'username' => $request->request->get('username'),
-                'introduction' => $request->request->get('introduction'),
-                'header_icon' => $headerImagePath,
-                'profile_icon' => $profileImagePath,
-        ];
-            Auth::user()->profile->update($profile_attr);
+            Auth::user()->profile->updateProfile($request, $headerIconImage, $profileIconImage);
+
             DB::commit();
             return response()->json([], 204);
         } catch (\Exception $exception) {

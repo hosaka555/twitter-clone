@@ -1,0 +1,40 @@
+.profile {
+  &-container {
+    width: 800px;
+    min-height: 500px;
+    background: white;
+    margin-bottom: 30px;
+    position: relative;
+  }
+
+  &__headerIcon {
+    width: 100%;
+    margin: auto;
+    height: 300px;
+    margin-bottom: 80px;
+    border: 1px solid black;
+  }
+
+  &__profileIcon {
+    background: white;
+    border: 1px solid black;
+    height: 150px;
+    width: 150px;
+    position: absolute;
+    top: 200px;
+    left: 0;
+  }
+
+  &__text {
+    &-username {
+      font-size: 1.5rem;
+      height: 50px;
+    }
+
+    &-account_id {
+    }
+
+    &-introduction {
+    }
+  }
+}

@@ -27,7 +27,8 @@ class ProfileTest extends TestCase
         $response = $this->actingAs($user)->get(route("api.get_profile", ["account_id" => $general_user->account_id]));
 
         $response->assertStatus(200);
-        $this->assertSame(Profile::where('user_id', $general_user->id)->get()->first()->toJson(), $response->original);
+        $profile = Profile::where('user_id', $general_user->id)->get()->first()->toArray();
+        $this->assertSame(array_merge($profile, ["account_id" => $general_user->account_id]), $response->original);
     }
 
     public function test_return_my_profile_data()
@@ -59,16 +60,29 @@ class ProfileTest extends TestCase
             "username" => "updated username",
             "introduction" => "Updated introduction",
             "header_icon" => $header_icon_image,
-            "profile_icon" => $profile_icon_image
+            "profile_icon" => $profile_icon_image,
+            "changeHeaderIcon" => 1,
+            "changeProfileIcon" => 1
         ];
 
-        $response = $this->actingAs($user)->put(route("api.update_profile", ["account_id" => $user->account_id]), $update_profile);
+        $response = $this->actingAs($user)->post(route("api.update_profile", ["account_id" => $user->account_id]), $update_profile);
 
         $profile = Profile::where('user_id', $user->id)->first();
         $response->assertStatus(204);
         $this->assertSame(array_slice($update_profile, 0, 2), $profile->only(['username', 'introduction']));
-        $this->assertTrue(Storage::disk('minio')->exists($profile->header_icon));
-        $this->assertTrue(Storage::disk('minio')->exists($profile->profile_icon));
+
+        $pattern = '/(?<=Icon\/)(.+)$/';
+
+        preg_match($pattern, $profile->header_icon, $mathces);
+        $headerIconName = $mathces[1];
+        Storage::cloud()->assertExists("images/headerIcon/" . $profile->$headerIconName);
+
+        preg_match($pattern, $profile->profile_icon, $mathces);
+        $profileIconName = $mathces[1];
+        Storage::cloud()->assertExists("images/profileIcon/" . $profile->$profileIconName);
+
+        Storage::cloud()->delete("images/headerIcon/" . $profile->$headerIconName);
+        Storage::cloud()->delete("images/profileIcon/" . $profile->$profileIconName);
     }
 
     public function test_cannot_upload_without_jpg_png()
@@ -81,23 +95,154 @@ class ProfileTest extends TestCase
         Storage::fake();
 
         $header_icon_image = UploadedFile::fake()->image('header_icon.gif');
-        $profile_icon_image = UploadedFile::fake()->image('profile_icon.pdf');
+        $profile_icon_image = UploadedFile::fake()->image('profile_icon.svg');
 
         $update_profile = [
             "username" => "updated username",
             "introduction" => "Updated introduction",
             "header_icon" => $header_icon_image,
-            "profile_icon" => $profile_icon_image
+            "profile_icon" => $profile_icon_image,
+            "changeHeaderIcon" => 1,
+            "changeProfileIcon" => 1
         ];
 
-        $response = $this->actingAs($user)->put(route("api.update_profile", ["account_id" => $user->account_id]), $update_profile);
+        $response = $this->actingAs($user)->post(route("api.update_profile", ["account_id" => $user->account_id]), $update_profile);
+        $response->assertStatus(422);
 
         $profile = Profile::where('user_id', $user->id)->first();
-        $response->assertStatus(422);
-        $this->assertSame($user->profile->only(['username','introduction']), $profile->only(['username', 'introduction']));
+        $this->assertSame($user->profile->only(['username', 'introduction']), $profile->only(['username', 'introduction']));
 
-        $this->assertFalse(Storage::disk('minio')->exists($profile->header_icon));
-        $this->assertFalse(Storage::disk('minio')->exists($profile->profile_icon));
+        $this->assertSame("http://localhost/img/profile/default_profile.png", $profile->profile_icon);
+
+
+        $this->assertSame("http://localhost/img/profile/default_header.png", $profile->header_icon);
     }
 
+    public function test_update_all_attributes()
+    {
+        $user = tap(factory(User::class)->create(), function ($user) {
+            $profile = factory(Profile::class)->make();
+            $user->profile()->save($profile);
+        });
+
+        Storage::fake();
+
+        $header_icon_image = UploadedFile::fake()->image('header_icon.jpg');
+        $profile_icon_image = UploadedFile::fake()->image('profile_icon.jpg');
+
+        $expectHeaderIcon = $user->profile->header_icon;
+        $expectProfileIcon = $user->profile->profile_icon;
+        $update_profile = [
+            "username" => "updated username",
+            "introduction" => "Updated introduction",
+            "header_icon" => $header_icon_image,
+            "profile_icon" => $profile_icon_image,
+            "changeHeaderIcon" => 1,
+            "changeProfileIcon" => 1
+        ];
+
+        $response = $this->actingAs($user)->post(route("api.update_profile", ["account_id" => $user->account_id]), $update_profile);
+
+        $profile = Profile::where('user_id', $user->id)->first();
+        $response->assertStatus(204);
+        $this->assertSame(array_slice($update_profile, 0, 2), $profile->only(['username', 'introduction']));
+        $this->assertFalse($expectHeaderIcon === $user->refresh()->profile->header_icon);
+        $this->assertFalse($expectProfileIcon === $user->refresh()->profile->profile_icon);
+    }
+
+    public function test_update_without_header_icon()
+    {
+        $user = tap(factory(User::class)->create(), function ($user) {
+            $profile = factory(Profile::class)->make();
+            $user->profile()->save($profile);
+        });
+
+        Storage::fake();
+
+        $header_icon_image = UploadedFile::fake()->image('header_icon.jpg');
+        $profile_icon_image = UploadedFile::fake()->image('profile_icon.jpg');
+
+        $expectHeaderIcon = $user->profile->header_icon;
+        $expectProfileIcon = $user->profile->profile_icon;
+        $update_profile = [
+            "username" => "updated username",
+            "introduction" => "Updated introduction",
+            "header_icon" => "",
+            "profile_icon" => $profile_icon_image,
+            "changeHeaderIcon" => 0,
+            "changeProfileIcon" => 1
+        ];
+
+        $response = $this->actingAs($user)->post(route("api.update_profile", ["account_id" => $user->account_id]), $update_profile);
+
+        $profile = Profile::where('user_id', $user->id)->first();
+        $response->assertStatus(204);
+        $this->assertSame(array_slice($update_profile, 0, 2), $profile->only(['username', 'introduction']));
+        $this->assertSame($expectHeaderIcon, $user->refresh()->profile->header_icon);
+        $this->assertFalse($expectProfileIcon === $user->refresh()->profile->profile_icon);
+    }
+
+    public function test_update_without_profile_icon()
+    {
+        $user = tap(factory(User::class)->create(), function ($user) {
+            $profile = factory(Profile::class)->make();
+            $user->profile()->save($profile);
+        });
+
+        Storage::fake();
+
+        $header_icon_image = UploadedFile::fake()->image('header_icon.jpg');
+        $profile_icon_image = UploadedFile::fake()->image('profile_icon.jpg');
+
+        $expectHeaderIcon = $user->profile->header_icon;
+        $expectProfileIcon = $user->profile->profile_icon;
+        $update_profile = [
+            "username" => "updated username",
+            "introduction" => "Updated introduction",
+            "header_icon" => $header_icon_image,
+            "profile_icon" => "",
+            "changeHeaderIcon" => 1,
+            "changeProfileIcon" => 0
+        ];
+
+        $response = $this->actingAs($user)->post(route("api.update_profile", ["account_id" => $user->account_id]), $update_profile);
+
+        $profile = Profile::where('user_id', $user->id)->first();
+        $response->assertStatus(204);
+        $this->assertSame(array_slice($update_profile, 0, 2), $profile->only(['username', 'introduction']));
+        $this->assertFalse($expectHeaderIcon === $user->refresh()->profile->header_icon);
+        $this->assertSame($expectProfileIcon, $user->refresh()->profile->profile_icon);
+    }
+
+    public function test_update_without_icons()
+    {
+        $user = tap(factory(User::class)->create(), function ($user) {
+            $profile = factory(Profile::class)->make();
+            $user->profile()->save($profile);
+        });
+
+        Storage::fake();
+
+        $header_icon_image = UploadedFile::fake()->image('header_icon.jpg');
+        $profile_icon_image = UploadedFile::fake()->image('profile_icon.jpg');
+
+        $expectHeaderIcon = $user->profile->header_icon;
+        $expectProfileIcon = $user->profile->profile_icon;
+        $update_profile = [
+            "username" => "updated username",
+            "introduction" => "Updated introduction",
+            "header_icon" => "",
+            "profile_icon" => "",
+            "changeHeaderIcon" => 0,
+            "changeProfileIcon" => 0
+        ];
+
+        $response = $this->actingAs($user)->post(route("api.update_profile", ["account_id" => $user->account_id]), $update_profile);
+
+        $profile = Profile::where('user_id', $user->id)->first();
+        $response->assertStatus(204);
+        $this->assertSame(array_slice($update_profile, 0, 2), $profile->only(['username', 'introduction']));
+        $this->assertSame($expectHeaderIcon, $user->refresh()->profile->header_icon);
+        $this->assertSame($expectProfileIcon, $user->refresh()->profile->profile_icon);
+    }
 }

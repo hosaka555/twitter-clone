@@ -1,3 +1,11 @@
 <template>
-  <img src="/img/default.png" class="icon profile-icon" />
+  <img :src="userIcon" class="icon profile-icon" />
 </template>
+
+<script>
+export default {
+  props: {
+    userIcon: String
+  }
+}
+</script>

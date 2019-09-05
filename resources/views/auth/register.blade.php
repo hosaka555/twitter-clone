@@ -19,6 +19,9 @@ $title = "新規登録"
       <label for="account_id">アカウントID</label>
       <input type="name" class="form__input" required name="account_id">
 
+      <label for="username">ユーザーネーム</label>
+      <input type="username" class="form__input" required name="username" id="username">
+
       <label for="email">メールアドレス</label>
       <input type="email" class="form__input" required name="email" id="email">
 

@@ -103,7 +103,8 @@ class RegisterTest extends TestCase
             'account_id' => $user->account_id,
             'email' => $user->email,
             'password' => $user->password,
-            'password_confirmation' => $user->password, 'username' => $profile->username
+            'password_confirmation' => $user->password,
+            'username' => $profile->username
         ]));
 
         $response->assertStatus(302)->assertRedirect('/signup');

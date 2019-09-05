@@ -11,13 +11,18 @@ class ProfileImage extends Model
 
     public function __construct($image)
     {
+        if (!$image) {
+            $this->filename = "";
+            return;
+        }
+
         $this->image = $image;
         $this->filename = $this->getFileName();
     }
 
     private function getFileName()
     {
-        $filename = hash('sha256',$this->image->getFilename().$this->image->getATime()) . '.' . $this->image->extension();
+        $filename = hash('sha256', $this->image->getFilename() . $this->image->getATime()) . '.' . $this->image->extension();
         return $filename;
     }
 }

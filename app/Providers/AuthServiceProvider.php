@@ -2,8 +2,11 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Gate;
+use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use App\Providers\AuthUserProvider;
+use Auth;
+use Illuminate\Auth\EloquentUserProvider;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -13,7 +16,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        // 'App\Model' => 'App\Policies\ModelPolicy',
+        'App\Model' => 'App\Policies\ModelPolicy',
     ];
 
     /**
@@ -21,10 +24,19 @@ class AuthServiceProvider extends ServiceProvider
      *
      * @return void
      */
+
     public function boot()
     {
         $this->registerPolicies();
 
         //
+    }
+
+    public function register()
+    {
+        // いろいろ試したらできたけど、仕組みは理解できていない。
+        Auth::provider('with_profile', function ($app) {
+            return new AuthUserProvider($app['hash'], 'App\User');
+        });
     }
 }

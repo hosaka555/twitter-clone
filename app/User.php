@@ -6,6 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use App\Profile;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -17,7 +18,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'account_id', 'email', 'password','profile'
+        'account_id', 'email', 'password',
     ];
 
     /**
@@ -26,7 +27,11 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $hidden = [
-        'password',
+        'password','id','created_at','updated_at'
+    ];
+
+    protected $appends= [
+        'profile_icon'
     ];
 
     /**
@@ -53,11 +58,16 @@ class User extends Authenticatable implements JWTSubject
             return $this->hasMany('App\Tweet'); // Relationを書く
         }
 
-        return $this->hasMany('App\Tweet')->orderBy('created_at',"desc");
+        return $this->hasMany('App\Tweet')->orderBy('created_at', "desc");
     }
 
     public function profile()
     {
         return $this->hasOne('App\Profile');
+    }
+
+    public function getProfileIconAttribute()
+    {
+        return $this->profile->profile_icon;
     }
 }
