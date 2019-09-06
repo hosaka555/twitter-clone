@@ -15955,8 +15955,10 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     getTweets: function getTweets() {
+      var id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+      var account_id = id || this.account_id;
       var params = _services_query__WEBPACK_IMPORTED_MODULE_1__["query"].generate(this.query);
-      var url = "/api/users/".concat(this.account_id, "/tweets?").concat(params);
+      var url = "/api/users/".concat(account_id, "/tweets?").concat(params);
       this.$store.dispatch("tweet/getTweets", {
         url: url,
         page: this.page
@@ -16111,7 +16113,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       previewProfileIcon: "",
       isProcessing: false,
       changeHeaderIcon: 0,
-      changeProfileIcon: 0
+      changeProfileIcon: 0,
+      account_id: ''
     };
   },
   components: {
@@ -16121,7 +16124,27 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   mounted: function mounted() {
     this.getProfile();
   },
+  created: function created() {
+    this.getAccountId();
+    this.checkCurrentUser();
+  },
   methods: {
+    checkCurrentUser: function checkCurrentUser() {
+      if (this.$store.getters["user/me"].account_id !== this.account_id) {
+        this.$router.push({
+          name: "profile",
+          params: {
+            account_id: this.$store.getters["user/me"].account_id
+          }
+        });
+      }
+    },
+    getAccountId: function getAccountId() {
+      var pattern = /users\/(.+)\/edit/;
+      var targetUrl = decodeURI(window.location.pathname);
+      var result = targetUrl.match(pattern);
+      this.account_id = result[1];
+    },
     getProfile: function getProfile() {
       this.profile = this.$store.getters["profile/all"];
     },
@@ -16351,6 +16374,13 @@ __webpack_require__.r(__webpack_exports__);
     this.getAccountId();
     this.getUserProfile();
   },
+  beforeRouteUpdate: function beforeRouteUpdate(to, from, next) {
+    next(); // TODO stateを初期化したい
+
+    this.getAccountId();
+    this.getUserProfile();
+    this.$refs.tweets.getTweets(this.account_id);
+  },
   methods: {
     getAccountId: function getAccountId() {
       var pattern = /users\/(.+)/;
@@ -16364,7 +16394,7 @@ __webpack_require__.r(__webpack_exports__);
     getUserProfile: function getUserProfile() {
       var _this = this;
 
-      var url = "/api/users/".concat(this.$store.getters["user/me"].account_id);
+      var url = "/api/users/".concat(this.account_id);
 
       var successCB = function successCB(response) {
         _this.profile = response.data;
@@ -71481,7 +71511,6 @@ var render = function() {
       _c("h1", [_vm._v("Porifle")]),
       _vm._v(" "),
       _c("ShowProfile", {
-        ref: "profile",
         attrs: { currentUser: _vm.currentUser(), profile: _vm.profile }
       }),
       _vm._v(" "),
@@ -71490,6 +71519,7 @@ var render = function() {
         : _vm._e(),
       _vm._v(" "),
       _c("TweetsList", {
+        ref: "tweets",
         attrs: { query: _vm.query, page: _vm.page, account_id: _vm.account_id }
       })
     ],

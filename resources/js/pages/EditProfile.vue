@@ -124,7 +124,8 @@ export default {
       previewProfileIcon: "",
       isProcessing: false,
       changeHeaderIcon: 0,
-      changeProfileIcon: 0
+      changeProfileIcon: 0,
+      account_id: '',
     };
   },
   components: {
@@ -134,7 +135,25 @@ export default {
   mounted() {
     this.getProfile();
   },
+  created() {
+    this.getAccountId();
+    this.checkCurrentUser();
+  },
   methods: {
+    checkCurrentUser() {
+      if (this.$store.getters["user/me"].account_id !== this.account_id) {
+        this.$router.push({
+          name: "profile",
+          params: { account_id: this.$store.getters["user/me"].account_id }
+        });
+      }
+    },
+    getAccountId() {
+      let pattern = /users\/(.+)\/edit/;
+      let targetUrl = decodeURI(window.location.pathname);
+      let result = targetUrl.match(pattern);
+      this.account_id = result[1];
+    },
     getProfile() {
       this.profile = this.$store.getters["profile/all"];
     },

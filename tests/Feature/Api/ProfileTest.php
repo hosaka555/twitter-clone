@@ -75,14 +75,64 @@ class ProfileTest extends TestCase
 
         preg_match($pattern, $profile->header_icon, $mathces);
         $headerIconName = $mathces[1];
-        Storage::cloud()->assertExists("images/headerIcon/" . $profile->$headerIconName);
+        Storage::cloud()->assertExists("images/headerIcon/" . $headerIconName);
 
         preg_match($pattern, $profile->profile_icon, $mathces);
         $profileIconName = $mathces[1];
-        Storage::cloud()->assertExists("images/profileIcon/" . $profile->$profileIconName);
+        Storage::cloud()->assertExists("images/profileIcon/" . $profileIconName);
 
-        Storage::cloud()->delete("images/headerIcon/" . $profile->$headerIconName);
-        Storage::cloud()->delete("images/profileIcon/" . $profile->$profileIconName);
+        Storage::cloud()->delete("images/headerIcon/" . $headerIconName);
+        Storage::cloud()->delete("images/profileIcon/" . $profileIconName);
+    }
+
+    public function test_update_his_profile_when_another_user_update_others_profile()
+    {
+        $user = tap(factory(User::class)->create(), function ($user) {
+            $profile = factory(Profile::class)->make();
+            $user->profile()->save($profile);
+        });
+
+        $general_user = tap(factory(User::class, "general")->create(), function ($user) {
+            $profile = factory(Profile::class)->make();
+            $user->profile()->save($profile);
+        });
+
+        Storage::fake();
+
+        $header_icon_image = UploadedFile::fake()->image('header_icon.png');
+        $profile_icon_image = UploadedFile::fake()->image('profile_icon.png');
+
+        $update_profile = [
+            "username" => "updated username",
+            "introduction" => "Updated introduction",
+            "header_icon" => $header_icon_image,
+            "profile_icon" => $profile_icon_image,
+            "changeHeaderIcon" => 1,
+            "changeProfileIcon" => 1
+        ];
+
+        $response = $this->actingAs($user)->post(route("api.update_profile", ["account_id" => $general_user->account_id]), $update_profile);
+        $response->assertStatus(204);
+
+        $profile = Profile::where('user_id', $general_user->id)->first();
+        $this->assertSame($general_user->profile->only(['username', 'introduction']), $profile->only(['username', 'introduction']));
+        $this->assertSame("http://localhost/img/profile/default_profile.png", $profile->profile_icon);
+        $this->assertSame("http://localhost/img/profile/default_header.png", $profile->header_icon);
+
+        $profile = Profile::where('user_id', $user->id)->first();
+        $this->assertSame(array_slice($update_profile, 0, 2), $profile->only(['username', 'introduction']));
+
+        $pattern = '/(?<=Icon\/)(.+)$/';
+
+        preg_match($pattern, $profile->header_icon, $mathces);
+        $headerIconName = $mathces[1];
+        Storage::cloud()->assertExists("images/headerIcon/" . $headerIconName);
+
+        preg_match($pattern, $profile->profile_icon, $mathces);
+        $profileIconName = $mathces[1];
+        Storage::cloud()->assertExists("images/profileIcon/" . $profileIconName);
+        Storage::cloud()->delete("images/headerIcon/" . $headerIconName);
+        Storage::cloud()->delete("images/profileIcon/" . $profileIconName);
     }
 
     public function test_cannot_upload_without_jpg_png()

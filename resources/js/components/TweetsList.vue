@@ -28,9 +28,11 @@ export default {
     this.getTweets();
   },
   methods: {
-    getTweets() {
+    getTweets(id='') {
+
+      const account_id = id || this.account_id;
       const params = query.generate(this.query);
-      const url = `/api/users/${this.account_id}/tweets?${params}`;
+      const url = `/api/users/${account_id}/tweets?${params}`;
 
       this.$store.dispatch("tweet/getTweets", { url: url, page: this.page });
     }

@@ -1,13 +1,13 @@
 <template>
   <div class="profile-container">
     <h1>Porifle</h1>
-    <ShowProfile ref="profile" :currentUser="currentUser()" :profile="profile" />
+    <ShowProfile :currentUser="currentUser()" :profile="profile" />
 
     <div v-if="currentUser()">
       <PostTweet :pageName="page" />
     </div>
 
-    <TweetsList :query="query" :page="page" :account_id="account_id"/>
+    <TweetsList :query="query" :page="page" :account_id="account_id"  ref="tweets"/>
   </div>
 </template>
 
@@ -42,6 +42,13 @@ export default {
     this.getAccountId();
     this.getUserProfile();
   },
+  beforeRouteUpdate(to, from, next) {
+    next();
+    // TODO stateを初期化したい
+    this.getAccountId();
+    this.getUserProfile();
+    this.$refs.tweets.getTweets(this.account_id);
+  },
   methods: {
     getAccountId() {
       let pattern = /users\/(.+)/;
@@ -53,7 +60,7 @@ export default {
       return this.$store.getters["user/me"].account_id === this.account_id;
     },
     getUserProfile() {
-      const url = `/api/users/${this.$store.getters["user/me"].account_id}`;
+      const url = `/api/users/${this.account_id}`;
       const successCB = response => {
         this.profile = response.data;
 
