@@ -13,3 +13,15 @@ $factory->define(Profile::class, function (Faker $faker) {
         "profile_icon" => null
     ];
 });
+
+$factory->defineAs(Profile::class, 'seeder', function (Faker $faker) use ($factory) {
+    $user = $factory->raw(Profile::class);
+
+    return array_merge(
+        $user,
+        [
+            'username' => $faker->userName,
+            "introduction" => $faker->text
+        ]
+    );
+});

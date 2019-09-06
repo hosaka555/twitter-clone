@@ -15682,8 +15682,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    pageName: {
+      type: String,
+      "default": "home"
+    },
+    isRedirect: {
+      type: Boolean,
+      "default": false
+    }
+  },
   data: function data() {
     return {
       message: "",
@@ -15706,13 +15720,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _postTweet = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-        var url, data, redirectToName;
+        var _this = this;
+
+        var url, data, pageName, clearMessage, isRedirect;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 if (!(!this.countOver && !this.isProcessing)) {
-                  _context.next = 8;
+                  _context.next = 10;
                   break;
                 }
 
@@ -15721,18 +15737,26 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 data = {
                   message: this.message
                 };
-                redirectToName = "home";
-                _context.next = 7;
+                pageName = this.pageName;
+
+                clearMessage = function clearMessage() {
+                  return _this.message = "";
+                };
+
+                isRedirect = this.isRedirect;
+                _context.next = 9;
                 return this.$store.dispatch("tweet/postTweet", {
                   url: url,
                   data: data,
-                  redirectToName: redirectToName
+                  pageName: pageName,
+                  clearMessage: clearMessage,
+                  isRedirect: isRedirect
                 });
 
-              case 7:
+              case 9:
                 this.isProcessing = false;
 
-              case 8:
+              case 10:
               case "end":
                 return _context.stop();
             }
@@ -15747,7 +15771,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       return postTweet;
     }(),
     getAuthUserIcon: function getAuthUserIcon() {
-      return this.$store.getters['profile/profile_icon'];
+      return this.$store.getters["profile/profile_icon"];
     }
   }
 });
@@ -15785,7 +15809,6 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_ProfileIcon__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/components/ProfileIcon */ "./resources/js/components/ProfileIcon.vue");
-/* harmony import */ var _services_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/services/http */ "./resources/js/services/http.js");
 //
 //
 //
@@ -15818,51 +15841,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    currentUser: {
+      type: Boolean,
+      "default": false
+    },
+    profile: {
+      type: Object
+    }
+  },
   components: {
     ProfileIcon: _components_ProfileIcon__WEBPACK_IMPORTED_MODULE_0__["default"]
-  },
-  data: function data() {
-    return {
-      profile: {
-        username: "",
-        introduction: "",
-        header_icon: "",
-        profile_icon: "",
-        account_id: ""
-      }
-    };
-  },
-  mounted: function mounted() {
-    this.getUserProfile();
-  },
-  methods: {
-    getUserProfile: function getUserProfile() {
-      var _this = this;
-
-      var url = "/api/users/".concat(this.$store.getters["user/me"].account_id);
-
-      var successCB = function successCB(response) {
-        _this.profile = response.data;
-
-        if (_this.currentUser) {
-          _this.$store.dispatch("profile/setProfile", {
-            profile: response.data
-          });
-        }
-      };
-
-      var errorCB = function errorCB(error) {
-        console.log(error);
-      };
-
-      _services_http__WEBPACK_IMPORTED_MODULE_1__["http"].get(url, successCB, errorCB);
-    },
-    currentUser: function currentUser() {
-      return this.$store.getters["user/me"].account_id === this.profile.account_id;
-    }
   }
 });
 
@@ -15880,8 +15871,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_ProfileIcon__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/components/ProfileIcon */ "./resources/js/components/ProfileIcon.vue");
 /* harmony import */ var moment_timezone__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! moment-timezone */ "./node_modules/moment-timezone/index.js");
 /* harmony import */ var moment_timezone__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(moment_timezone__WEBPACK_IMPORTED_MODULE_1__);
-//
-//
 //
 //
 //
@@ -15950,7 +15939,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     query: Object,
-    page: String
+    page: String,
+    account_id: String
   },
   components: {
     ShowTweet: _components_ShowTweet__WEBPACK_IMPORTED_MODULE_0__["default"]
@@ -15966,7 +15956,7 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     getTweets: function getTweets() {
       var params = _services_query__WEBPACK_IMPORTED_MODULE_1__["query"].generate(this.query);
-      var url = "/api/users/".concat(this.$store.getters["user/me"].account_id, "/tweets?").concat(params);
+      var url = "/api/users/".concat(this.account_id, "/tweets?").concat(params);
       this.$store.dispatch("tweet/getTweets", {
         url: url,
         page: this.page
@@ -16243,6 +16233,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_TweetsList__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/components/TweetsList */ "./resources/js/components/TweetsList.vue");
+/* harmony import */ var _components_PostTweet__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/components/PostTweet */ "./resources/js/components/PostTweet.vue");
+//
 //
 //
 //
@@ -16251,17 +16243,28 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       query: {
         include_relations: 1
       },
-      page: "home"
+      page: "home",
+      account_id: ""
     };
   },
   components: {
-    TweetsList: _components_TweetsList__WEBPACK_IMPORTED_MODULE_0__["default"]
+    TweetsList: _components_TweetsList__WEBPACK_IMPORTED_MODULE_0__["default"],
+    PostTweet: _components_PostTweet__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
+  created: function created() {
+    this.setAccountId();
+  },
+  methods: {
+    setAccountId: function setAccountId() {
+      this.account_id = this.$store.getters["user/me"].account_id;
+    }
   }
 });
 
@@ -16304,6 +16307,8 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_ShowProfile__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/components/ShowProfile */ "./resources/js/components/ShowProfile.vue");
 /* harmony import */ var _components_TweetsList__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/components/TweetsList */ "./resources/js/components/TweetsList.vue");
+/* harmony import */ var _components_PostTweet__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/components/PostTweet */ "./resources/js/components/PostTweet.vue");
+/* harmony import */ var _services_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/services/http */ "./resources/js/services/http.js");
 //
 //
 //
@@ -16312,20 +16317,71 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      account_id: "",
       query: {
         include_relations: 0
       },
-      profile: "profile"
+      page: "profile",
+      profile: {
+        username: "",
+        introduction: "",
+        header_icon: "",
+        profile_icon: ""
+      }
     };
   },
   components: {
     ShowProfile: _components_ShowProfile__WEBPACK_IMPORTED_MODULE_0__["default"],
-    TweetsList: _components_TweetsList__WEBPACK_IMPORTED_MODULE_1__["default"]
+    TweetsList: _components_TweetsList__WEBPACK_IMPORTED_MODULE_1__["default"],
+    PostTweet: _components_PostTweet__WEBPACK_IMPORTED_MODULE_2__["default"]
+  },
+  created: function created() {
+    this.getAccountId();
+    this.getUserProfile();
+  },
+  methods: {
+    getAccountId: function getAccountId() {
+      var pattern = /users\/(.+)/;
+      var targetUrl = decodeURI(window.location.pathname);
+      var result = targetUrl.match(pattern);
+      this.account_id = result[1];
+    },
+    currentUser: function currentUser() {
+      return this.$store.getters["user/me"].account_id === this.account_id;
+    },
+    getUserProfile: function getUserProfile() {
+      var _this = this;
+
+      var url = "/api/users/".concat(this.$store.getters["user/me"].account_id);
+
+      var successCB = function successCB(response) {
+        _this.profile = response.data;
+
+        if (_this.currentUser) {
+          _this.$store.dispatch("profile/setProfile", {
+            profile: response.data
+          });
+        }
+      };
+
+      var errorCB = function errorCB(error) {
+        console.log(error);
+      };
+
+      _services_http__WEBPACK_IMPORTED_MODULE_3__["http"].get(url, successCB, errorCB);
+    }
   }
 });
 
@@ -70944,7 +71000,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "profile-container" }, [
+  return _c("div", { staticClass: "profileBox" }, [
     _vm.profile["header_icon"]
       ? _c(
           "div",
@@ -71036,30 +71092,28 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("div", { staticClass: "tweet-container" }, [
-      _c(
-        "div",
-        [
-          _c("ProfileIcon", {
-            staticClass: "tweet-container__profileIcon",
-            attrs: { "user-icon": _vm.tweet["profile_icon"] }
-          }),
+    _c(
+      "div",
+      [
+        _c("ProfileIcon", {
+          staticClass: "tweet-container__profileIcon",
+          attrs: { "user-icon": _vm.tweet["profile_icon"] }
+        }),
+        _vm._v(" "),
+        _c("div", { staticClass: "tweet-head" }, [
+          _c("span", [_vm._v(_vm._s(_vm.tweet.username))]),
           _vm._v(" "),
-          _c("div", { staticClass: "tweet-head" }, [
-            _c("span", [_vm._v(_vm._s(_vm.tweet.username))]),
-            _vm._v(" "),
-            _c("span", [_vm._v(_vm._s(_vm.tweet.account_id))]),
-            _vm._v(" "),
-            _c("span", [_vm._v(_vm._s(_vm.date))])
-          ])
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c("div", { staticClass: "tweet-body" }, [
-        _c("div", { staticClass: "tweet-body__message" }, [
-          _c("p", [_vm._v(_vm._s(_vm.tweet.message))])
+          _c("span", [_vm._v(_vm._s(_vm.tweet.account_id))]),
+          _vm._v(" "),
+          _c("span", [_vm._v(_vm._s(_vm.date))])
         ])
+      ],
+      1
+    ),
+    _vm._v(" "),
+    _c("div", { staticClass: "tweet-body" }, [
+      _c("div", { staticClass: "tweet-body__message" }, [
+        _c("p", [_vm._v(_vm._s(_vm.tweet.message))])
       ])
     ])
   ])
@@ -71092,7 +71146,7 @@ var render = function() {
         _vm._l(_vm.tweets, function(tweet) {
           return _c(
             "div",
-            { key: tweet.id },
+            { key: tweet.id, staticClass: "tweet-container" },
             [_c("ShowTweet", { attrs: { tweet: tweet } })],
             1
           )
@@ -71357,7 +71411,11 @@ var render = function() {
     [
       _c("h1", [_vm._v("Home")]),
       _vm._v(" "),
-      _c("TweetsList", { attrs: { query: _vm.query, page: _vm.page } })
+      _c("PostTweet", { attrs: { pageName: _vm.page } }),
+      _vm._v(" "),
+      _c("TweetsList", {
+        attrs: { query: _vm.query, page: _vm.page, account_id: _vm.account_id }
+      })
     ],
     1
   )
@@ -71386,7 +71444,11 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    [_c("h1", [_vm._v("ツイートの新規作成")]), _vm._v(" "), _c("PostTweet")],
+    [
+      _c("h1", [_vm._v("ツイートの新規作成")]),
+      _vm._v(" "),
+      _c("PostTweet", { attrs: { isRedirect: true } })
+    ],
     1
   )
 }
@@ -71414,12 +71476,22 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
+    { staticClass: "profile-container" },
     [
       _c("h1", [_vm._v("Porifle")]),
       _vm._v(" "),
-      _c("ShowProfile"),
+      _c("ShowProfile", {
+        ref: "profile",
+        attrs: { currentUser: _vm.currentUser(), profile: _vm.profile }
+      }),
       _vm._v(" "),
-      _c("TweetsList", { attrs: { query: _vm.query, page: _vm.profile } })
+      _vm.currentUser()
+        ? _c("div", [_c("PostTweet", { attrs: { pageName: _vm.page } })], 1)
+        : _vm._e(),
+      _vm._v(" "),
+      _c("TweetsList", {
+        attrs: { query: _vm.query, page: _vm.page, account_id: _vm.account_id }
+      })
     ],
     1
   )
@@ -87681,25 +87753,24 @@ axios.interceptors.request.use(function (config) {
   config.headers.Authorization = "Bearer ".concat(_store__WEBPACK_IMPORTED_MODULE_0__["default"].getters['user/token']);
   return config;
 });
+var UNAUTHORIZED = 401;
+axios.interceptors.response.use(function (response) {
+  return response;
+}, function (error) {
+  var status = error.response.status;
+
+  if (status === UNAUTHORIZED) {
+    _store__WEBPACK_IMPORTED_MODULE_0__["default"].dispatch('user/logout');
+  }
+
+  return Promise.reject(error);
+});
 
 if (token) {
   window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
 } else {
   console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
-/**
- * Echo exposes an expressive API for subscribing to channels and listening
- * for events that are broadcast by Laravel. Echo and event broadcasting
- * allows your team to easily build robust real-time web applications.
- */
-// import Echo from 'laravel-echo'
-// window.Pusher = require('pusher-js');
-// window.Echo = new Echo({
-//     broadcaster: 'pusher',
-//     key: process.env.MIX_PUSHER_APP_KEY,
-//     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-//     encrypted: true
-// });
 
 /***/ }),
 
@@ -88755,39 +88826,57 @@ var mutations = {
         state[page] = tweets;
       }
     });
+  },
+  addTweet: function addTweet(state, _ref2) {
+    var page = _ref2.page,
+        tweets = _ref2.tweets;
+    state[page].unshift(JSON.parse(tweets));
   }
 };
 var actions = {
   postTweet: function () {
     var _postTweet = _asyncToGenerator(
     /*#__PURE__*/
-    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(context, _ref2) {
-      var url, data, redirectToName, successCB, errorCB;
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(context, _ref3) {
+      var url, data, pageName, clearMessage, isRedirect, successCB, errorCB;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              url = _ref2.url, data = _ref2.data, redirectToName = _ref2.redirectToName;
+              url = _ref3.url, data = _ref3.data, pageName = _ref3.pageName, clearMessage = _ref3.clearMessage, isRedirect = _ref3.isRedirect;
 
               successCB =
               /*#__PURE__*/
               function () {
-                var _ref3 = _asyncToGenerator(
+                var _ref4 = _asyncToGenerator(
                 /*#__PURE__*/
                 _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(response) {
                   return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
                     while (1) {
                       switch (_context.prev = _context.next) {
                         case 0:
-                          _context.next = 2;
+                          if (!isRedirect) {
+                            _context.next = 5;
+                            break;
+                          }
+
+                          _context.next = 3;
                           return _router__WEBPACK_IMPORTED_MODULE_2__["default"].push({
-                            name: redirectToName
+                            name: pageName
                           });
 
-                        case 2:
-                          return _context.abrupt("return", _context.sent);
-
                         case 3:
+                          _context.next = 7;
+                          break;
+
+                        case 5:
+                          context.commit('addTweet', {
+                            page: pageName,
+                            tweets: response.data
+                          });
+                          clearMessage();
+
+                        case 7:
                         case "end":
                           return _context.stop();
                       }
@@ -88796,7 +88885,7 @@ var actions = {
                 }));
 
                 return function successCB(_x3) {
-                  return _ref3.apply(this, arguments);
+                  return _ref4.apply(this, arguments);
                 };
               }();
 
@@ -88821,9 +88910,9 @@ var actions = {
 
     return postTweet;
   }(),
-  getTweets: function getTweets(context, _ref4) {
-    var url = _ref4.url,
-        page = _ref4.page;
+  getTweets: function getTweets(context, _ref5) {
+    var url = _ref5.url,
+        page = _ref5.page;
 
     var successCB = function successCB(response) {
       return context.commit('setTweet', {

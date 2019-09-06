@@ -38,3 +38,15 @@ $factory->defineAs(User::class, 'general', function () use ($factory) {
         ]
     );
 });
+
+$factory->defineAs(User::class, 'seeder', function (Faker $faker) use ($factory) {
+    $user = $factory->raw(User::class);
+
+    return array_merge(
+        $user,
+        [
+            'account_id' => $faker->userName,
+            "email" => $faker->email
+        ]
+    );
+});

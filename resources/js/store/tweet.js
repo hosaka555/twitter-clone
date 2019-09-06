@@ -19,11 +19,22 @@ const mutations = {
       }
     });
   },
+  addTweet(state, { page, tweets }) {
+    state[page].unshift(JSON.parse(tweets));
+  }
 };
 
 const actions = {
-  async postTweet(context, { url, data, redirectToName }) {
-    const successCB = async response => await router.push({ name: redirectToName });
+  async postTweet(context, { url, data, pageName, clearMessage, isRedirect }) {
+    const successCB = async response => {
+      if (isRedirect) {
+        await router.push({ name: pageName });
+      } else {
+        context.commit('addTweet', { page: pageName, tweets: response.data });
+        clearMessage();
+      }
+    };
+
     const errorCB = error => console.log(error);
     await async.post(url, data, successCB, errorCB);
   },

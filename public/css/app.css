@@ -13939,11 +13939,14 @@ body {
 
 .tweet-container {
   min-height: 150px;
-  width: 700px;
   background: white;
-  margin-bottom: 15px;
+  margin-top: 15px;
   border: solid 1px #f2f2f2;
   padding: 10px;
+}
+
+.tweet-container:last-child {
+  margin-bottom: 100px;
 }
 
 .tweet-container__profileIcon {
@@ -13996,6 +13999,10 @@ body {
 }
 
 .profile-container {
+  min-height: 1400px;
+}
+
+.profileBox {
   width: 800px;
   min-height: 500px;
   background: white;

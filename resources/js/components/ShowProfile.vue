@@ -1,5 +1,5 @@
 <template>
-  <div class="profile-container">
+  <div class="profileBox">
     <div v-if="profile['header_icon']">
       <img :src="profile['header_icon']" class="profile__headerIcon" />
       <ProfileIcon :user-icon="profile['profile_icon']" class="profile__profileIcon" />
@@ -32,48 +32,18 @@
 
 <script>
 import ProfileIcon from "@/components/ProfileIcon";
-import { http } from "@/services/http";
 export default {
+  props: {
+    currentUser: {
+      type: Boolean,
+      default: false
+    },
+    profile: {
+      type: Object
+    }
+  },
   components: {
     ProfileIcon
-  },
-  data() {
-    return {
-      profile: {
-        username: "",
-        introduction: "",
-        header_icon: "",
-        profile_icon: "",
-        account_id: ""
-      }
-    };
-  },
-  mounted() {
-    this.getUserProfile();
-  },
-  methods: {
-    getUserProfile() {
-      const url = `/api/users/${this.$store.getters["user/me"].account_id}`;
-      const successCB = response => {
-        this.profile = response.data;
-
-        if (this.currentUser) {
-          this.$store.dispatch("profile/setProfile", {
-            profile: response.data
-          });
-        }
-      };
-      const errorCB = error => {
-        console.log(error);
-      };
-
-      http.get(url, successCB, errorCB);
-    },
-    currentUser() {
-      return (
-        this.$store.getters["user/me"].account_id === this.profile.account_id
-      );
-    }
   }
 };
 </script>

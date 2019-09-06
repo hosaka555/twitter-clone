@@ -1,6 +1,6 @@
 <template>
   <div v-if="tweets">
-    <div v-for="tweet in tweets" :key="tweet.id">
+    <div v-for="tweet in tweets" :key="tweet.id" class="tweet-container">
       <ShowTweet :tweet="tweet" />
     </div>
   </div>
@@ -13,7 +13,8 @@ import { query } from "@/services/query";
 export default {
   props: {
     query: Object,
-    page: String
+    page: String,
+    account_id: String,
   },
   components: {
     ShowTweet
@@ -29,7 +30,8 @@ export default {
   methods: {
     getTweets() {
       const params = query.generate(this.query);
-      const url = `/api/users/${this.$store.getters["user/me"].account_id}/tweets?${params}`;
+      const url = `/api/users/${this.account_id}/tweets?${params}`;
+
       this.$store.dispatch("tweet/getTweets", { url: url, page: this.page });
     }
   }

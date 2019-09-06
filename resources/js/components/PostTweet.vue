@@ -2,12 +2,16 @@
   <div>
     <h1>New Tweet</h1>
     <div class="newTweet-container">
-      <ProfileIcon :user-icon="getAuthUserIcon()"/>
+      <ProfileIcon :user-icon="getAuthUserIcon()" />
       <textarea class="newTweet__input" placeholder="いまどうしている？" v-model="message" />
       <div class="newTweet-bottomBox">
         <div class="bottomBox-rightSide">
           <div class="bottomBox-rightSide__count" :class="{countover: countOver }">{{ restOfCount }}</div>
-          <button class="button bottomBox-rightSide__button" @click.prevent="postTweet" :disabled="countOver || message.length === 0 || isProcessing">投稿</button>
+          <button
+            class="button bottomBox-rightSide__button"
+            @click.prevent="postTweet"
+            :disabled="countOver || message.length === 0 || isProcessing"
+          >投稿</button>
         </div>
       </div>
     </div>
@@ -18,11 +22,21 @@
 import ProfileIcon from "./ProfileIcon";
 
 export default {
+  props: {
+    pageName: {
+      type: String,
+      default: "home"
+    },
+    isRedirect:{
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       message: "",
       countOver: false,
-      isProcessing: false,
+      isProcessing: false
     };
   },
   components: {
@@ -42,19 +56,23 @@ export default {
         this.isProcessing = true;
         const url = `/api/users/${this.$store.getters["user/me"].account_id}/tweets/tweet`;
         const data = { message: this.message };
-        const redirectToName = "home";
+        const pageName = this.pageName;
+        const clearMessage = () => this.message = "";
+        const isRedirect = this.isRedirect;
 
         await this.$store.dispatch("tweet/postTweet", {
           url,
           data,
-          redirectToName
+          pageName,
+          clearMessage,
+          isRedirect
         });
 
         this.isProcessing = false;
       }
     },
     getAuthUserIcon() {
-      return this.$store.getters['profile/profile_icon'];
+      return this.$store.getters["profile/profile_icon"];
     }
   }
 };

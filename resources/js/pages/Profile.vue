@@ -1,27 +1,74 @@
 <template>
-  <div>
+  <div class="profile-container">
     <h1>Porifle</h1>
-    <ShowProfile />
-    <TweetsList :query="query" :page="profile"/>
+    <ShowProfile ref="profile" :currentUser="currentUser()" :profile="profile" />
+
+    <div v-if="currentUser()">
+      <PostTweet :pageName="page" />
+    </div>
+
+    <TweetsList :query="query" :page="page" :account_id="account_id"/>
   </div>
 </template>
 
 <script>
-import ShowProfile from '@/components/ShowProfile';
-import TweetsList from '@/components/TweetsList';
+import ShowProfile from "@/components/ShowProfile";
+import TweetsList from "@/components/TweetsList";
+import PostTweet from "@/components/PostTweet";
+import { http } from "@/services/http";
 
 export default {
-  data: function(){
+  data() {
     return {
+      account_id: "",
       query: {
-        include_relations: 0,
+        include_relations: 0
       },
-      profile: "profile"
-    }
+      page: "profile",
+      profile: {
+        username: "",
+        introduction: "",
+        header_icon: "",
+        profile_icon: ""
+      }
+    };
   },
   components: {
     ShowProfile,
     TweetsList,
+    PostTweet
   },
+  created() {
+    this.getAccountId();
+    this.getUserProfile();
+  },
+  methods: {
+    getAccountId() {
+      let pattern = /users\/(.+)/;
+      let targetUrl = decodeURI(window.location.pathname);
+      let result = targetUrl.match(pattern);
+      this.account_id = result[1];
+    },
+    currentUser() {
+      return this.$store.getters["user/me"].account_id === this.account_id;
+    },
+    getUserProfile() {
+      const url = `/api/users/${this.$store.getters["user/me"].account_id}`;
+      const successCB = response => {
+        this.profile = response.data;
+
+        if (this.currentUser) {
+          this.$store.dispatch("profile/setProfile", {
+            profile: response.data
+          });
+        }
+      };
+      const errorCB = error => {
+        console.log(error);
+      };
+
+      http.get(url, successCB, errorCB);
+    }
+  }
 };
 </script>

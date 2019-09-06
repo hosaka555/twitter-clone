@@ -8,18 +8,19 @@ use App\Http\Requests\Api\PostTweetRequest;
 use Illuminate\Support\Facades\Auth;
 use App\Tweet;
 use DB;
+use App\User;
 
 class TweetController extends Controller
 {
 
-    public function index(Request $request)
+    public function index(Request $request,$account_id)
     {
         $q = $request->query();
         if (!$q) {
             $q["include_relations"] = 0;
         }
 
-        $tweets = Auth::user($q["include_relations"])->tweets->toJson();
+        $tweets = User::where('account_id',$account_id)->firstOrFail()->tweets->toJson();
 
         return response()->json($tweets, 200);
     }
@@ -30,6 +31,6 @@ class TweetController extends Controller
         $tweet = new Tweet($tweet_attr);
         Auth::user()->tweets()->save($tweet);
 
-        return response()->json([], 200);
+        return response()->json($data = $tweet->toJson(), 200);
     }
 }

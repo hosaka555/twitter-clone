@@ -1,18 +1,16 @@
 <template>
   <div>
-    <div class="tweet-container">
-      <div>
-        <ProfileIcon class="tweet-container__profileIcon" :user-icon="tweet['profile_icon']"/>
-        <div class="tweet-head">
-          <span>{{tweet.username}}</span>
-          <span>{{tweet.account_id}}</span>
-          <span>{{ date }}</span>
-        </div>
+    <div>
+      <ProfileIcon class="tweet-container__profileIcon" :user-icon="tweet['profile_icon']" />
+      <div class="tweet-head">
+        <span>{{tweet.username}}</span>
+        <span>{{tweet.account_id}}</span>
+        <span>{{ date }}</span>
       </div>
-      <div class="tweet-body">
-        <div class="tweet-body__message">
-          <p>{{ tweet.message }}</p>
-        </div>
+    </div>
+    <div class="tweet-body">
+      <div class="tweet-body__message">
+        <p>{{ tweet.message }}</p>
       </div>
     </div>
   </div>

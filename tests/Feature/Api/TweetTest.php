@@ -18,7 +18,10 @@ class TweetTest extends TestCase
 
     public function test_user_can_post_tweet()
     {
-        $user = factory(User::class)->create();
+        $user = tap(factory(User::class)->create(), function ($user) {
+            $profile = factory(Profile::class)->make();
+            $user->profile()->save($profile);
+        });
         $tweet = factory(Tweet::class,"test")->make();
 
         $response = $this->actingAs($user)->post(route("api.post_tweet", ["account_id" => $user->account_id]), [
