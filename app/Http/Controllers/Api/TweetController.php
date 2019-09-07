@@ -25,6 +25,12 @@ class TweetController extends Controller
         return response()->json($tweets, 200);
     }
 
+    public function showTweet($account_id,$tweet_id)
+    {
+        $tweet = Tweet::where('id',$tweet_id)->firstOrFail()->toJson();
+        return response()->json($tweet,200);
+    }
+
     public function create(PostTweetRequest $request)
     {
         $tweet_attr = ["message" => $request->message];

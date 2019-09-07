@@ -17,7 +17,7 @@ class Tweet extends Model
 
     public function getAccountIdAttribute()
     {
-        return auth()->user()->account_id;
+        return $this->user->account_id;
     }
 
     public function getProfileIconAttribute()

@@ -1,18 +1,27 @@
 <template>
   <div>
     <div>
-      <ProfileIcon class="tweet-container__profileIcon" :user-icon="tweet['profile_icon']" />
+      <router-link :to="{ name: 'profile', params: { account_id: tweet.account_id} }">
+        <ProfileIcon class="tweet-container__profileIcon" :user-icon="tweet['profile_icon']" />
+      </router-link>
       <div class="tweet-head">
-        <span>{{tweet.username}}</span>
-        <span>{{tweet.account_id}}</span>
+        <router-link :to="{ name: 'profile', params: { account_id: tweet.account_id} }">
+          <span>{{tweet.username}}</span>
+          <span>{{tweet.account_id}}</span>
+        </router-link>
+
         <span>{{ date }}</span>
       </div>
     </div>
-    <div class="tweet-body">
-      <div class="tweet-body__message">
-        <p>{{ tweet.message }}</p>
+    <router-link
+      :to="{name: 'detail-tweet',params:{account_id: tweet.account_id,tweet_id: tweet.id,tweet: tweet}}"
+    >
+      <div class="tweet-body">
+        <div class="tweet-body__message">
+          <p>{{ tweet.message }}</p>
+        </div>
       </div>
-    </div>
+    </router-link>
   </div>
 </template>
 

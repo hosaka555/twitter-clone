@@ -29,6 +29,7 @@ Route::middleware('auth:api')->namespace('Api')->group(function () {
             Route::post("tweet", "TweetController@create")->name("api.post_tweet");
 
             Route::get("/", "TweetController@index")->name("api.get_tweets");
+            Route::get("/{tweet_id}", "TweetController@showTweet")->name("api.get_tweet");
         });
     });
 });

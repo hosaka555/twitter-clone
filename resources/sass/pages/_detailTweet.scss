@@ -1,23 +1,21 @@
-.tweet {
+.detailTweet {
   &-container {
-    min-height: 150px;
+    width: 95%;
+    max-width: 1000px;
+    min-height: 600px;
     background: white;
-    margin-top: 15px;
     border: solid 1px rgb(242, 242, 242);
     padding: 10px;
+    margin: 100px auto;
 
-    & a{
+    & a {
       text-decoration: none;
       color: black;
     }
 
-    &:last-child {
-      margin-bottom: 100px;
-    }
-
     &__profileIcon {
-      width: 100px;
-      height: 100px;
+      width: 150px;
+      height: 150px;
     }
   }
 
@@ -25,14 +23,16 @@
     margin-top: 10px;
     display: inline-block;
     display: block;
-
+    padding: 30px;
     &__message {
-      font-size: 1.5rem;
+      font-size: 1.8rem;
     }
   }
 
   &-head {
     display: inline-block;
     vertical-align: top;
+    margin-top: 30px;
+    font-size: 1.5rem;
   }
 }
