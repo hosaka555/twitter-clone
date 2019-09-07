@@ -14175,3 +14175,30 @@ body {
   font-size: 1.5rem;
 }
 
+.users-container {
+  width: 90%;
+  max-width: 1000px;
+  margin: 50px auto 300px auto;
+}
+
+.users-container a {
+  text-decoration: none;
+  color: black;
+}
+
+.showUser-container {
+  background: white;
+  margin: 30px;
+  border: 1px black solid;
+  padding: 30px;
+}
+
+.showUser-container__profileIcon {
+  width: 100px;
+  height: 100px;
+}
+
+.showUser-head {
+  display: inline-block;
+}
+

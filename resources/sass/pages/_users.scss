@@ -1,0 +1,27 @@
+.users-container {
+  width: 90%;
+  max-width: 1000px;
+  margin: 50px auto 300px auto;
+
+  & a {
+    text-decoration: none;
+    color: black;
+  }
+}
+.showUser {
+  &-container {
+    background: white;
+    margin: 30px;
+    border: 1px black solid;
+    padding: 30px;
+
+    &__profileIcon {
+      width: 100px;
+      height: 100px;
+    }
+  }
+
+  &-head{
+    display: inline-block;
+  }
+}

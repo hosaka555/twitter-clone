@@ -7,7 +7,7 @@
         </li>
 
         <li class="header-menu__item">
-          <a href class="header-menu__link">ユーザー一覧</a>
+          <router-link class="header-menu__link" :to="{ name: 'users' }">ユーザー一覧</router-link>
         </li>
         <li class="header-menu__item">
           <router-link

@@ -20,7 +20,7 @@ $factory->defineAs(Profile::class, 'seeder', function (Faker $faker) use ($facto
     return array_merge(
         $user,
         [
-            'username' => $faker->userName,
+            'username' => $faker->name,
             "introduction" => $faker->text
         ]
     );

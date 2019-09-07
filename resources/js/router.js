@@ -5,6 +5,7 @@ import Tweet from "@/pages/NewTweet";
 import Profile from '@/pages/Profile';
 import EditProfile from '@/pages/EditProfile';
 import DetailTweet from "@/pages/DetailTweet";
+import Users from "@/pages/Users";
 Vue.use(VueRouter);
 
 const routes = [
@@ -32,6 +33,11 @@ const routes = [
     path: `/users/:account_id/tweets/:tweet_id`,
     name: "detail-tweet",
     component: DetailTweet,
+  },
+  {
+    path: `/users`,
+    name: "users",
+    component: Users,
   }
 ];
 

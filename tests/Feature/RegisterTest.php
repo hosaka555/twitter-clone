@@ -136,4 +136,76 @@ class RegisterTest extends TestCase
 
         $this->assertGuest();
     }
+
+    public function test_cannot_signup_when_username_is_japanese_character()
+    {
+        $this->withExceptionHandling();
+        $this->get('/signup');
+
+        $user = factory(User::class)->make(["account_id" => "漢字だよ"]);
+        $profile = factory(Profile::class)->make();
+
+        $response = $this->post(route('auth.register', [
+            'account_id' => $user->account_id,
+            'email' => $user->email,
+            'password' => $user->password,
+            'password_confirmation' => $user->password,
+            'username' => $profile->username
+        ]));
+
+        $response->assertStatus(302)->assertRedirect('/signup');
+        $errors = session('errors');
+        $response->assertSessionHasErrors();
+        $this->assertEquals('The account id format is invalid.', $errors->get('account_id')[0]);
+
+        $this->assertGuest();
+    }
+
+    public function test_cannot_signup_when_username_is_less_than_3_words()
+    {
+        $this->withExceptionHandling();
+        $this->get('/signup');
+
+        $user = factory(User::class)->make(["account_id" => "aa"]);
+        $profile = factory(Profile::class)->make();
+
+        $response = $this->post(route('auth.register', [
+            'account_id' => $user->account_id,
+            'email' => $user->email,
+            'password' => $user->password,
+            'password_confirmation' => $user->password,
+            'username' => $profile->username
+        ]));
+
+        $response->assertStatus(302)->assertRedirect('/signup');
+        $errors = session('errors');
+        $response->assertSessionHasErrors();
+        $this->assertEquals('The account id format is invalid.', $errors->get('account_id')[0]);
+
+        $this->assertGuest();
+    }
+
+    public function test_cannot_signup_when_username_is_more_than_31_words()
+    {
+        $this->withExceptionHandling();
+        $this->get('/signup');
+
+        $user = factory(User::class)->make(["account_id" => str_repeat("a",31)]);
+        $profile = factory(Profile::class)->make();
+
+        $response = $this->post(route('auth.register', [
+            'account_id' => $user->account_id,
+            'email' => $user->email,
+            'password' => $user->password,
+            'password_confirmation' => $user->password,
+            'username' => $profile->username
+        ]));
+
+        $response->assertStatus(302)->assertRedirect('/signup');
+        $errors = session('errors');
+        $response->assertSessionHasErrors();
+        $this->assertEquals('The account id format is invalid.', $errors->get('account_id')[0]);
+
+        $this->assertGuest();
+    }
 }
