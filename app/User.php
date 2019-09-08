@@ -66,8 +66,28 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasOne('App\Profile');
     }
 
+    public function relationships()
+    {
+        return $this->belongsToMany(self::class, 'relation_ships', 'follower_id', 'followed_id')->withTimestamps();
+    }
+
     public function getProfileIconAttribute()
     {
         return $this->profile->profile_icon;
+    }
+
+    public function follow($followed)
+    {
+        $this->relationships()->sync([$followed->id], true);
+    }
+
+    public function following($followed)
+    {
+        return !!$this->relationships()->where('followed_id', $followed->id)->first();
+    }
+
+    public function unfollow($followed)
+    {
+        $this->relationships()->detach($followed);
     }
 }

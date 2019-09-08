@@ -21,6 +21,8 @@ Route::middleware('auth:api')->namespace('Api')->group(function () {
     Route::prefix("users/{account_id}")->group(function () {
 
         Route::get("/","ProfileController@index")->name("api.get_profile");
+        Route::put("/follow","RelationshipController@follow")->name("api.follow");
+        Route::delete("/unfollow","RelationshipController@unfollow")->name("api.unfollow");
 
        Route::get("/edit","ProfileController@edit")->name("api.edit_profile");
 
