@@ -16713,7 +16713,7 @@ __webpack_require__.r(__webpack_exports__);
       var successCB = function successCB(response) {
         _this.profile = response.data;
 
-        if (_this.currentUser) {
+        if (_this.currentUser()) {
           _this.$store.dispatch("profile/setProfile", {
             profile: response.data
           });

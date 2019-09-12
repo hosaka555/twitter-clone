@@ -69,12 +69,13 @@ export default {
       const successCB = response => {
         this.profile = response.data;
 
-        if (this.currentUser) {
+        if (this.currentUser()) {
           this.$store.dispatch("profile/setProfile", {
             profile: response.data
           });
         }
       };
+
       const errorCB = error => {
         console.log(error);
       };
