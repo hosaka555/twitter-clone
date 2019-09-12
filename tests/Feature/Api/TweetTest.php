@@ -78,9 +78,40 @@ class TweetTest extends TestCase
         $response = $this->actingAs($user)->get(route_with_query("api.get_tweet", [
             "account_id" => $user->account_id,
             "tweet_id" => $tweet->id
-        ], ["include_relations" => 0]));
+        ]));
 
         $response->assertStatus(200);
-        $this->assertSame($tweet->toJson(),$response->original);
+        $this->assertSame($tweet->toJson(), $response->original);
+    }
+
+    public function test_can_get_tweets_with_followees_tweets()
+    {
+        $user = tap(factory(User::class)->create(), function ($user) {
+            $profile = factory(Profile::class)->make();
+            $user->profile()->save($profile);
+            for ($i = 0; $i < 2; $i++) {
+                $tweet = factory(Tweet::class)->make(["message" => "This is $i message"]);
+
+                $user->tweets()->save($tweet);
+            };
+        });
+
+        $general_user = tap(factory(User::class, 'general')->create(), function ($user) {
+            $profile = factory(Profile::class)->make();
+            $user->profile()->save($profile);
+            for ($i = 0; $i < 2; $i++) {
+                $tweet = factory(Tweet::class)->make(["message" => "This is $i message"]);
+
+                $user->tweets()->save($tweet);
+            };
+        });
+
+        $user->follow($general_user);
+
+        $response = $this->actingAs($user)->get(route_with_query("api.get_tweets", ["account_id" => $user->account_id], ["include_relations" => 1]));
+
+        $response->assertStatus(200);
+        $tweets = Tweet::whereIn('user_id', [$user->id, $general_user->id])->orderBy('created_at','desc')->get();
+        $this->assertSame(json_encode($tweets), $response->original);
     }
 }

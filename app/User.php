@@ -55,7 +55,9 @@ class User extends Authenticatable implements JWTSubject
     public function tweets(int $query = 0)
     {
         if ($query) {
-            return $this->hasMany('App\Tweet'); // Relationを書く
+            $ids = $this->getFollowees()->pluck('followed_id')->all();
+            array_push($ids, $this->id);
+            return Tweet::whereIn('user_id', $ids)->orderBy('created_at', "desc");
         }
 
         return $this->hasMany('App\Tweet')->orderBy('created_at', "desc");

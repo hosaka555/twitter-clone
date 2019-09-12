@@ -13,22 +13,24 @@ use App\User;
 class TweetController extends Controller
 {
 
-    public function index(Request $request,$account_id)
+    public function index(Request $request, $account_id)
     {
-        $q = $request->query();
+
+        $q = intval($request->query('include_relations'));
+
         if (!$q) {
-            $q["include_relations"] = 0;
+            $q = 0;
         }
 
-        $tweets = User::where('account_id',$account_id)->firstOrFail()->tweets->toJson();
+        $tweets = User::where('account_id', $account_id)->firstOrFail()->tweets($q)->get()->toJson();
 
         return response()->json($tweets, 200);
     }
 
-    public function showTweet($account_id,$tweet_id)
+    public function showTweet($account_id, $tweet_id)
     {
-        $tweet = Tweet::where('id',$tweet_id)->firstOrFail()->toJson();
-        return response()->json($tweet,200);
+        $tweet = Tweet::where('id', $tweet_id)->firstOrFail()->toJson();
+        return response()->json($tweet, 200);
     }
 
     public function create(PostTweetRequest $request)
