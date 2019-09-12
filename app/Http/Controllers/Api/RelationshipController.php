@@ -23,4 +23,11 @@ class RelationshipController extends Controller
         auth()->user()->unfollow($user);
         return response()->json([],204);
     }
+
+    public function followees($account_id)
+    {
+        $user = User::where('account_id',$account_id)->firstOrFail();
+        $followees = $user->getFollowees();
+        return response()->json($followees->pluck('followed_id'),200);
+    }
 }

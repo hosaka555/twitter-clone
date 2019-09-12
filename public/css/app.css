@@ -13974,6 +13974,11 @@ body {
   vertical-align: top;
 }
 
+.unfollow {
+  background: plum;
+  color: white;
+}
+
 .newTweet-container {
   background: white;
   height: 220px;

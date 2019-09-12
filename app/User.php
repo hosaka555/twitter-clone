@@ -27,11 +27,11 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $hidden = [
-        'password','id','created_at','updated_at'
+        'password', 'created_at', 'updated_at'
     ];
 
-    protected $appends= [
-        'profile_icon'
+    protected $appends = [
+        'profile_icon',
     ];
 
     /**
@@ -78,7 +78,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function follow($followed)
     {
-        $this->relationships()->sync([$followed->id], true);
+        $this->relationships()->sync([$followed->id], false);
     }
 
     public function following($followed)
@@ -89,5 +89,10 @@ class User extends Authenticatable implements JWTSubject
     public function unfollow($followed)
     {
         $this->relationships()->detach($followed);
+    }
+
+    public function getFollowees()
+    {
+        return $this->relationships()->where('follower_id', $this->id);
     }
 }

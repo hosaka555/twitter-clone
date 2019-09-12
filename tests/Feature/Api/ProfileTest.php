@@ -28,7 +28,9 @@ class ProfileTest extends TestCase
 
         $response->assertStatus(200);
         $profile = Profile::where('user_id', $general_user->id)->get()->first()->toArray();
-        $this->assertSame(array_merge($profile, ["account_id" => $general_user->account_id]), $response->original);
+        $account_id = $general_user->account_id;
+        $isFollowing = $user->following($general_user);
+        $this->assertSame(array_merge($profile, compact(['account_id','isFollowing'])), $response->original);
     }
 
     public function test_return_my_profile_data()

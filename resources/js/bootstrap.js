@@ -43,7 +43,7 @@ axios.interceptors.response.use(
   error => {
     const { status } = error.response;
     if (status === UNAUTHORIZED) {
-      store.dispatch('user/logout')
+      store.dispatch('user/logout');
     }
     return Promise.reject(error);
   }

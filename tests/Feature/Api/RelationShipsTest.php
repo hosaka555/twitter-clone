@@ -88,4 +88,28 @@ class RelationShipsTest extends TestCase
         $response->assertStatus(404);
         $this->assertDatabaseMissing('relation_ships', ["follower" => $this->user->id, "followed" => $invalid_account_id]);
     }
+
+    public function test_can_get_followees()
+    {
+        $followees = factory(\App\User::class, "seeder", 5)->create();
+        $users = factory(\App\User::class, "seeder", 5)->create();
+
+        // eval(\Psy\sh());
+        for ($i = 0; $i < 5; $i++) {
+            $profile = factory(\App\Profile::class)->make();
+            $followees[$i]->profile()->save($profile);
+        }
+        for ($i = 0; $i < 5; $i++) {
+            $profile = factory(\App\Profile::class)->make();
+            $users[$i]->profile()->save($profile);
+        }
+
+        $this->user->relationships()->saveMany($followees);
+        $this->assertTrue($this->user->following($followees->last()));
+
+        $response = $this->actingAs($this->user)->get(route('api.get_followees', ["account_id" => $this->user->account_id]));
+
+        $response->assertStatus(200);
+        $this->assertTrue($followees->pluck('id') == $response->original);
+    }
 }

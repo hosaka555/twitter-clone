@@ -1,13 +1,17 @@
 <template>
   <div class="profile-container">
     <h1>Porifle</h1>
-    <ShowProfile :currentUser="currentUser()" :profile="profile" />
+    <ShowProfile
+      :currentUser="currentUser()"
+      :profile="profile"
+      :isFollowing="profile.isFollowing"
+    />
 
     <div v-if="currentUser()">
       <PostTweet :pageName="page" />
     </div>
 
-    <TweetsList :query="query" :page="page" :account_id="account_id"  ref="tweets"/>
+    <TweetsList :query="query" :page="page" :account_id="account_id" ref="tweets" />
   </div>
 </template>
 
@@ -29,7 +33,8 @@ export default {
         username: "",
         introduction: "",
         header_icon: "",
-        profile_icon: ""
+        profile_icon: "",
+        isFollowing: false
       }
     };
   },

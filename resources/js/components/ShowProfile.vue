@@ -13,7 +13,7 @@
           </router-link>
         </div>
         <div v-else>
-          <button>Follow</button>
+          <FollowButton :isFollowing="profile.isFollowing" :account_id="profile.account_id" />
         </div>
       </div>
     </div>
@@ -32,6 +32,8 @@
 
 <script>
 import ProfileIcon from "@/components/ProfileIcon";
+import FollowButton from "./FollowButton";
+
 export default {
   props: {
     currentUser: {
@@ -43,7 +45,8 @@ export default {
     }
   },
   components: {
-    ProfileIcon
+    ProfileIcon,
+    FollowButton
   }
 };
 </script>

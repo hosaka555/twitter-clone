@@ -5,7 +5,9 @@
       <div class="showUser-head">
         <span class="showUser__text">{{user.profile.username}}</span>
         <span class="showUser__text">{{user.account_id}}</span>
+        <FollowButton :isFollowing="isFollowing" :account_id='user.account_id' />
       </div>
+
       <div class="showUser-body">{{user.profile.introduction}}</div>
     </div>
   </router-link>
@@ -13,14 +15,22 @@
 
 <script>
 import ProfileIcon from "./ProfileIcon";
+import FollowButton from "./FollowButton";
+import { http } from "@/services/http";
+
 export default {
   props: {
     user: {
       type: Object
+    },
+    isFollowing: {
+      type: Boolean,
+      default: false
     }
   },
   components: {
-    ProfileIcon
+    ProfileIcon,
+    FollowButton
   }
 };
 </script>

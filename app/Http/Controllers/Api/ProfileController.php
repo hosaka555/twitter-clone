@@ -15,9 +15,16 @@ class ProfileController extends Controller
 {
     public function index($account_id)
     {
-        $profile = User::where('account_id', $account_id)->first()->profile->toArray();
+        $current_user = auth()->user();
+        if ($current_user->account_id === $account_id) {
+            $profile = User::where('account_id', $account_id)->firstOrFail()->profile->toArray();
+            $profile = array_merge($profile, ["account_id" => $account_id]);
+        } else {
+            $user = User::where('account_id', $account_id)->firstOrFail();
+            $isFollowing = $current_user->following($user);
+            $profile = array_merge($user->profile->toArray(), compact(['account_id', 'isFollowing']));
+        }
 
-        $profile = array_merge($profile, ["account_id" => $account_id]);
         return response()->json($profile, 200);
     }
 
