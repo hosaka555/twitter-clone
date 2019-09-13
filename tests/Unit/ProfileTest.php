@@ -27,7 +27,7 @@ class ProfileTest extends TestCase
             $user->profile()->save($profile);
         });
 
-        $this->assertSame("http://localhost/img/profile/default_header.png",$user->profile->header_icon);
+        $this->assertSame("http://localhost/img/profile/default_header.png", $user->profile->header_icon);
     }
 
     public function test_return_user_profile_icon()

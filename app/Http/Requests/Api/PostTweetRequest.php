@@ -35,12 +35,12 @@ class PostTweetRequest extends FormRequest
      * @throw HttpResponseException
      * @see FormRequest::failedValidation()
      */
-    protected function failedValidation( Validator $validator )
+    protected function failedValidation(Validator $validator)
     {
         $response['errors']  = $validator->errors()->toArray();
 
         throw new HttpResponseException(
-            response()->json( $response, 422 )
+            response()->json($response, 422)
         );
     }
 }

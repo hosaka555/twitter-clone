@@ -18,7 +18,7 @@ class UsersTableSeeder extends Seeder
         });
 
         factory(User::class, "seeder", 5)->create()->each(function ($user) {
-            $profile = factory(App\Profile::class,"seeder")->make();
+            $profile = factory(App\Profile::class, "seeder")->make();
             $user->profile()->save($profile);
         });
     }

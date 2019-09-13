@@ -35,9 +35,9 @@ class PostProfileImageRequest extends FormRequest
     {
         if ($this->fileNotExists($this->header_icon) && $this->fileNotExists($this->profile_icon)) {
             return $this->except(['header_icon', 'profile_icon']);
-        } else if ($this->fileNotExists($this->header_icon)) {
+        } elseif ($this->fileNotExists($this->header_icon)) {
             return $this->except('header_icon');
-        } else if ($this->fileNotExists($this->profile_icon)) {
+        } elseif ($this->fileNotExists($this->profile_icon)) {
             return $this->except('profile_icon');
         }
         return $this->all();

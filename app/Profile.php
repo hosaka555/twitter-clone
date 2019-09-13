@@ -48,10 +48,10 @@ class Profile extends Model
                 'profile_icon' => $profileIconImage->filename,
             ];
             $profile_attr = array_merge($profile_attr, $images);
-        } else if (!!$request->changeHeaderIcon) {
+        } elseif (!!$request->changeHeaderIcon) {
             $images = ['header_icon' => $headerIconImage->filename];
             $profile_attr = array_merge($profile_attr, $images);
-        } else if (!!$request->changeProfileIcon) {
+        } elseif (!!$request->changeProfileIcon) {
             $images = ['profile_icon' => $profileIconImage->filename];
             $profile_attr = array_merge($profile_attr, $images);
         }

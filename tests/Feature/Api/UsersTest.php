@@ -28,6 +28,6 @@ class UsersTest extends TestCase
         $response = $this->actingAs($user)->get(route('api.get_users'));
 
         $response->assertStatus(200);
-        $this->assertSame(User::whereNotIN('id', [$user->id])->orderBy('id','desc')->get()->toJson(), $response->original);
+        $this->assertSame(User::whereNotIN('id', [$user->id])->orderBy('id', 'desc')->get()->toJson(), $response->original);
     }
 }

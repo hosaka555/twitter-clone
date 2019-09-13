@@ -190,7 +190,7 @@ class RegisterTest extends TestCase
         $this->withExceptionHandling();
         $this->get('/signup');
 
-        $user = factory(User::class)->make(["account_id" => str_repeat("a",31)]);
+        $user = factory(User::class)->make(["account_id" => str_repeat("a", 31)]);
         $profile = factory(Profile::class)->make();
 
         $response = $this->post(route('auth.register', [

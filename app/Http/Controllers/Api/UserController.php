@@ -10,7 +10,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::whereNotIN('id', [auth()->user()->id])->orderBy('id','desc')->get()->toJson();
+        $users = User::whereNotIN('id', [auth()->user()->id])->orderBy('id', 'desc')->get()->toJson();
         return response()->json($users, 200);
     }
 }

@@ -17,18 +17,18 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->namespace('Api')->group(function () {
     Route::get('me', 'AuthController@me');
 
-    Route::get('users','UserController@index')->name('api.get_users');
+    Route::get('users', 'UserController@index')->name('api.get_users');
     Route::prefix("users/{account_id}")->group(function () {
 
-        Route::get("/","ProfileController@index")->name("api.get_profile");
+        Route::get("/", "ProfileController@index")->name("api.get_profile");
 
-        Route::put("/follow","RelationshipController@follow")->name("api.follow");
-        Route::delete("/unfollow","RelationshipController@unfollow")->name("api.unfollow");
-        Route::get("/followees","RelationshipController@followees")->name("api.get_followees");
+        Route::put("/follow", "RelationshipController@follow")->name("api.follow");
+        Route::delete("/unfollow", "RelationshipController@unfollow")->name("api.unfollow");
+        Route::get("/followees", "RelationshipController@followees")->name("api.get_followees");
 
-       Route::get("/edit","ProfileController@edit")->name("api.edit_profile");
+       Route::get("/edit", "ProfileController@edit")->name("api.edit_profile");
 
-        Route::post("/edit","ProfileController@update")->name("api.update_profile");
+        Route::post("/edit", "ProfileController@update")->name("api.update_profile");
 
         Route::prefix("tweets")->group(function () {
             Route::post("tweet", "TweetController@create")->name("api.post_tweet");

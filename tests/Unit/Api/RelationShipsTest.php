@@ -21,7 +21,7 @@ class RelationShipsTest extends TestCase
             $user->profile()->save($profile);
         });
 
-        $this->another_user = tap(factory(User::class,'general')->create(), function ($user) {
+        $this->another_user = tap(factory(User::class, 'general')->create(), function ($user) {
             $profile = factory(\App\Profile::class)->make();
             $user->profile()->save($profile);
         });
@@ -55,6 +55,6 @@ class RelationShipsTest extends TestCase
         $this->user->follow($this->another_user);
         $this->assertTrue($this->user->following($this->another_user));
 
-        $this->assertSame(1,sizeof(\App\Relationship::where('followed_id',$this->another_user->id)->get()));
+        $this->assertSame(1, sizeof(\App\Relationship::where('followed_id', $this->another_user->id)->get()));
     }
 }
