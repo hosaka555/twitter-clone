@@ -14,7 +14,7 @@ class TweetsTableSeeder extends Seeder
     public function run()
     {
         User::find(1)->each(function ($user) {
-            for($i=0;$i<10;$i++){
+            for ($i=0; $i<10; $i++) {
                 $user->tweets()->save(factory(Tweet::class)->make());
             }
         });

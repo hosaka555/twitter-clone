@@ -26,7 +26,7 @@ Route::middleware('auth:api')->namespace('Api')->group(function () {
         Route::delete("/unfollow", "RelationshipController@unfollow")->name("api.unfollow");
         Route::get("/followees", "RelationshipController@followees")->name("api.get_followees");
 
-       Route::get("/edit", "ProfileController@edit")->name("api.edit_profile");
+        Route::get("/edit", "ProfileController@edit")->name("api.edit_profile");
 
         Route::post("/edit", "ProfileController@update")->name("api.update_profile");
 
