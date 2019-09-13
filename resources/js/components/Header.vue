@@ -12,13 +12,13 @@
         <li class="header-menu__item">
           <router-link
             class="header-menu__link"
-            :to="{ name: 'profile', params: { account_id: this.$store.getters['user/me'].account_id} }"
+            :to="{ name: 'profile', params: { account_id: this.$store.state.user.user.account_id} }"
           >プロフィール</router-link>
         </li>
         <li class="header-menu__item">
           <router-link
             class="header-menu__link"
-            :to="{ name: 'newTweet', params: { account_id: this.$store.getters['user/me'].account_id} }"
+            :to="{ name: 'newTweet', params: { account_id: this.$store.state.user.user.account_id} }"
           >ツイートの作成</router-link>
         </li>
 

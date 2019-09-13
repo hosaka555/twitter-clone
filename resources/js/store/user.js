@@ -5,7 +5,7 @@ const initialState = {
   user: null
 };
 
-const state = () => Object.assign({}, initialState)
+const state = () => Object.assign({}, initialState);
 
 const getters = {
   token: state => state.token,

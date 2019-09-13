@@ -25,16 +25,16 @@ export default {
     }
   },
   mounted() {
-    this.getTweets();
+    this.fetchTweets();
   },
   methods: {
-    getTweets(id='') {
+    fetchTweets(id='') {
 
       const account_id = id || this.account_id;
       const params = query.generate(this.query);
       const url = `/api/users/${account_id}/tweets?${params}`;
 
-      this.$store.dispatch("tweet/getTweets", { url: url, page: this.page });
+      this.$store.dispatch("tweet/fetchTweets", { url: url, page: this.page });
     }
   }
 };

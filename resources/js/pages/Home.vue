@@ -29,7 +29,7 @@ export default {
   },
   methods: {
     setAccountId() {
-      this.account_id = this.$store.getters["user/me"].account_id;
+      this.account_id = this.$store.state.user.user.account_id;
     }
   }
 };

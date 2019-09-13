@@ -45,14 +45,14 @@ export default {
   },
   created() {
     this.getAccountId();
-    this.getUserProfile();
+    this.fetchUserProfile();
   },
   beforeRouteUpdate(to, from, next) {
     next();
     // TODO stateを初期化したい
     this.getAccountId();
-    this.getUserProfile();
-    this.$refs.tweets.getTweets(this.account_id);
+    this.fetchUserProfile();
+    this.$refs.tweets.fetchTweets(this.account_id);
   },
   methods: {
     getAccountId() {
@@ -62,9 +62,9 @@ export default {
       this.account_id = result[1];
     },
     currentUser() {
-      return this.$store.getters["user/me"].account_id === this.account_id;
+      return this.$store.state.user.user.account_id === this.account_id;
     },
-    getUserProfile() {
+    fetchUserProfile() {
       const url = `/api/users/${this.account_id}`;
       const successCB = response => {
         this.profile = response.data;

@@ -39,7 +39,7 @@ const actions = {
     await async.post(url, data, successCB, errorCB);
   },
 
-  getTweets(context, { url, page }) {
+  fetchTweets(context, { url, page }) {
     const successCB = (response) => context.commit('setTweet', { page: page, tweets: JSON.parse(response.data) });
     const errorCB = (error) => console.log(error);
 

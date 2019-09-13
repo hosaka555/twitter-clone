@@ -15813,7 +15813,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 }
 
                 this.isProcessing = true;
-                url = "/api/users/".concat(this.$store.getters["user/me"].account_id, "/tweets/tweet");
+                url = "/api/users/".concat(this.$store.state.user.user.account_id, "/tweets/tweet");
                 data = {
                   message: this.message
                 };
@@ -16091,15 +16091,15 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   mounted: function mounted() {
-    this.getTweets();
+    this.fetchTweets();
   },
   methods: {
-    getTweets: function getTweets() {
+    fetchTweets: function fetchTweets() {
       var id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
       var account_id = id || this.account_id;
       var params = _services_query__WEBPACK_IMPORTED_MODULE_1__["query"].generate(this.query);
       var url = "/api/users/".concat(account_id, "/tweets?").concat(params);
-      this.$store.dispatch("tweet/getTweets", {
+      this.$store.dispatch("tweet/fetchTweets", {
         url: url,
         page: this.page
       });
@@ -16439,11 +16439,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   methods: {
     checkCurrentUser: function checkCurrentUser() {
-      if (this.$store.getters["user/me"].account_id !== this.account_id) {
+      if (this.$store.state.user.user.account_id !== this.account_id) {
         this.$router.push({
           name: "profile",
           params: {
-            account_id: this.$store.getters["user/me"].account_id
+            account_id: this.$store.state.user.user.account_id
           }
         });
       }
@@ -16509,7 +16509,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 }
 
                 this.isProcessing = true;
-                url = "/api/users/".concat(this.$store.getters["user/me"].account_id, "/edit");
+                url = "/api/users/".concat(this.$store.state.user.user.account_id, "/edit");
                 formData = new FormData();
                 formData.append("username", this.profile.username);
                 formData.append("introduction", this.profile.introduction);
@@ -16527,7 +16527,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this2.$router.push({
                     name: "profile",
                     params: {
-                      account_id: _this2.$store.getters["user/me"].account_id
+                      account_id: _this2.$store.state.user.user.account_id
                     }
                   });
                 })["catch"](function (error) {
@@ -16595,7 +16595,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     setAccountId: function setAccountId() {
-      this.account_id = this.$store.getters["user/me"].account_id;
+      this.account_id = this.$store.state.user.user.account_id;
     }
   }
 });
@@ -16686,14 +16686,14 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {
     this.getAccountId();
-    this.getUserProfile();
+    this.fetchUserProfile();
   },
   beforeRouteUpdate: function beforeRouteUpdate(to, from, next) {
     next(); // TODO stateを初期化したい
 
     this.getAccountId();
-    this.getUserProfile();
-    this.$refs.tweets.getTweets(this.account_id);
+    this.fetchUserProfile();
+    this.$refs.tweets.fetchTweets(this.account_id);
   },
   methods: {
     getAccountId: function getAccountId() {
@@ -16703,9 +16703,9 @@ __webpack_require__.r(__webpack_exports__);
       this.account_id = result[1];
     },
     currentUser: function currentUser() {
-      return this.$store.getters["user/me"].account_id === this.account_id;
+      return this.$store.state.user.user.account_id === this.account_id;
     },
-    getUserProfile: function getUserProfile() {
+    fetchUserProfile: function fetchUserProfile() {
       var _this = this;
 
       var url = "/api/users/".concat(this.account_id);
@@ -16763,11 +16763,11 @@ __webpack_require__.r(__webpack_exports__);
     ShowUser: _components_ShowUser__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
   created: function created() {
-    this.getUsers();
+    this.fetchUsers();
     this.fetchFollowees();
   },
   methods: {
-    getUsers: function getUsers() {
+    fetchUsers: function fetchUsers() {
       var _this = this;
 
       var url = "/api/users";
@@ -16785,7 +16785,7 @@ __webpack_require__.r(__webpack_exports__);
     fetchFollowees: function fetchFollowees() {
       var _this2 = this;
 
-      var url = "/api/users/".concat(this.$store.getters["user/me"].account_id, "/followees");
+      var url = "/api/users/".concat(this.$store.state.user.user.account_id, "/followees");
 
       var successCB = function successCB(response) {
         _this2.followees_ids = response.data;
@@ -71278,7 +71278,7 @@ var render = function() {
                   to: {
                     name: "profile",
                     params: {
-                      account_id: this.$store.getters["user/me"].account_id
+                      account_id: this.$store.state.user.user.account_id
                     }
                   }
                 }
@@ -71301,7 +71301,7 @@ var render = function() {
                   to: {
                     name: "newTweet",
                     params: {
-                      account_id: this.$store.getters["user/me"].account_id
+                      account_id: this.$store.state.user.user.account_id
                     }
                   }
                 }
@@ -71502,7 +71502,7 @@ var render = function() {
                             to: {
                               name: "edit-profile",
                               params: {
-                                account_id: this.$store.getters["user/me"]
+                                account_id: this.$store.state.user.user
                                   .account_id
                               }
                             }
@@ -89945,7 +89945,7 @@ var actions = {
 
     return postTweet;
   }(),
-  getTweets: function getTweets(context, _ref5) {
+  fetchTweets: function fetchTweets(context, _ref5) {
     var url = _ref5.url,
         page = _ref5.page;
 

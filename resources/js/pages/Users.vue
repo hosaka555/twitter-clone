@@ -21,11 +21,11 @@ export default {
     ShowUser
   },
   created() {
-    this.getUsers();
+    this.fetchUsers();
     this.fetchFollowees();
   },
   methods: {
-    getUsers() {
+    fetchUsers() {
       const url = `/api/users`;
       const successCB = response => {
         this.users = JSON.parse(response.data);
@@ -38,7 +38,7 @@ export default {
       http.get(url, successCB, errorCB);
     },
     fetchFollowees() {
-      const url = `/api/users/${this.$store.getters["user/me"].account_id}/followees`;
+      const url = `/api/users/${this.$store.state.user.user.account_id}/followees`;
 
       const successCB = response => {
         this.followees_ids = response.data;

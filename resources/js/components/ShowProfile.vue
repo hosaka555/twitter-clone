@@ -7,7 +7,7 @@
       <div class="profile-aciton">
         <div v-if="currentUser">
           <router-link
-            :to="{name: 'edit-profile',params: { account_id: this.$store.getters['user/me'].account_id} }"
+            :to="{name: 'edit-profile',params: { account_id: this.$store.state.user.user.account_id} }"
           >
             <button>編集</button>
           </router-link>

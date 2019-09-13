@@ -54,7 +54,7 @@ export default {
     async postTweet() {
       if (!this.countOver && !this.isProcessing) {
         this.isProcessing = true;
-        const url = `/api/users/${this.$store.getters["user/me"].account_id}/tweets/tweet`;
+        const url = `/api/users/${this.$store.state.user.user.account_id}/tweets/tweet`;
         const data = { message: this.message };
         const pageName = this.pageName;
         const clearMessage = () => this.message = "";

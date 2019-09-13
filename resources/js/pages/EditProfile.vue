@@ -141,10 +141,10 @@ export default {
   },
   methods: {
     checkCurrentUser() {
-      if (this.$store.getters["user/me"].account_id !== this.account_id) {
+      if (this.$store.state.user.user.account_id !== this.account_id) {
         this.$router.push({
           name: "profile",
-          params: { account_id: this.$store.getters["user/me"].account_id }
+          params: { account_id: this.$store.state.user.user.account_id }
         });
       }
     },
@@ -192,7 +192,7 @@ export default {
       if (this.profile.username && !this.isProcessing) {
         this.isProcessing = true;
 
-        const url = `/api/users/${this.$store.getters["user/me"].account_id}/edit`;
+        const url = `/api/users/${this.$store.state.user.user.account_id}/edit`;
 
         let formData = new FormData();
 
@@ -214,7 +214,7 @@ export default {
           .then(response => {
             this.$router.push({
               name: "profile",
-              params: { account_id: this.$store.getters["user/me"].account_id }
+              params: { account_id: this.$store.state.user.user.account_id }
             });
           })
           .catch(error => {
