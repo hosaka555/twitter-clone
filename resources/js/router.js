@@ -6,6 +6,9 @@ import Profile from '@/pages/Profile';
 import EditProfile from '@/pages/EditProfile';
 import DetailTweet from "@/pages/DetailTweet";
 import Users from "@/pages/Users";
+import NotFoundError from "@/pages/errors/NotFoundError";
+import SystemError from "@/pages/errors/SystemError";
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -38,7 +41,19 @@ const routes = [
     path: `/users`,
     name: "users",
     component: Users,
-  }
+  },
+  {
+    path: '/404',
+    component: NotFoundError,
+  },
+  {
+    path: '/500',
+    component: SystemError,
+  },
+  {
+    path: '*',
+    component: NotFoundError,
+  },
 ];
 
 export default new VueRouter({
