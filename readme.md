@@ -1,11 +1,18 @@
-docker-compose.yml がある場所で
+## Docker 起動
 
 ```sh
 docker-compose build
 docker-compose up
 ```
 
-上記完了後、別のターミナルを起動して
+## 一括セットアップ
+
+```sh
+docker exec -it docker_compose_laravel_web_1 /bin/bash
+./setup.sh
+```
+
+## 手動でやるとき用
 
 ```sh
 docker exec -it docker_compose_laravel_web_1 /bin/bash
@@ -16,7 +23,7 @@ systemctl start nginx
 systemctl start php-fpm
 ```
 
-JWT
+### JWT
 
 ```sh
 php artisan cache:clear
@@ -24,13 +31,13 @@ php artisan config:clear
 php artisan jwt:secret
 ```
 
-Local Machine
+## Local Machineのセットアップ
 
 ```sh
 echo "127.0.0.1 s3" >> /etc/hosts
 ```
 
-アクセス権の変更
+アクセス権の変更(mac)
 
 ```sh
 brew install minio/stable/mc
