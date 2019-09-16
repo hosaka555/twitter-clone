@@ -20,7 +20,13 @@ import ShowProfile from "@/components/ShowProfile";
 import TweetsList from "@/components/TweetsList";
 import PostTweet from "@/components/PostTweet";
 import { http } from "@/services/http";
-
+const initialProfile = {
+  username: "",
+  introduction: "",
+  header_icon: "",
+  profile_icon: "",
+  isFollowing: false
+};
 export default {
   data() {
     return {
@@ -29,13 +35,7 @@ export default {
         include_relations: 0
       },
       page: "profile",
-      profile: {
-        username: "",
-        introduction: "",
-        header_icon: "",
-        profile_icon: "",
-        isFollowing: false
-      }
+      profile: initialProfile
     };
   },
   components: {
@@ -44,12 +44,15 @@ export default {
     PostTweet
   },
   created() {
+    this.clearTweets();
     this.getAccountId();
     this.fetchUserProfile();
   },
   beforeRouteUpdate(to, from, next) {
+    this.clearProfile();
+    this.clearTweets();
     next();
-    // TODO stateを初期化したい
+
     this.getAccountId();
     this.fetchUserProfile();
     this.$refs.tweets.fetchTweets(this.account_id);
@@ -75,12 +78,16 @@ export default {
           });
         }
       };
-
       const errorCB = error => {
         console.log(error);
       };
-
       http.get(url, successCB, errorCB);
+    },
+    clearProfile() {
+      this.profile = initialProfile;
+    },
+    clearTweets() {
+      this.$store.dispatch("tweet/clearTweets", { page: this.page });
     }
   }
 };

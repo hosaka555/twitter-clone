@@ -21,7 +21,10 @@ const mutations = {
   },
   addTweet(state, { page, tweets }) {
     state[page].unshift(JSON.parse(tweets));
-  }
+  },
+  resetTweets(state, { page }) {
+    state[page] = [];
+  },
 };
 
 const actions = {
@@ -38,13 +41,15 @@ const actions = {
     const errorCB = error => console.log(error);
     await async.post(url, data, successCB, errorCB);
   },
-
   fetchTweets(context, { url, page }) {
     const successCB = (response) => context.commit('setTweet', { page: page, tweets: JSON.parse(response.data) });
     const errorCB = (error) => console.log(error);
 
     http.get(url, successCB, errorCB);
-  }
+  },
+  clearTweets(context, { page }) {
+    context.commit('resetTweets', { page: page });
+  },
 };
 
 export default {

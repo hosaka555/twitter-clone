@@ -16662,6 +16662,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+var initialProfile = {
+  username: "",
+  introduction: "",
+  header_icon: "",
+  profile_icon: "",
+  isFollowing: false
+};
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -16670,13 +16677,7 @@ __webpack_require__.r(__webpack_exports__);
         include_relations: 0
       },
       page: "profile",
-      profile: {
-        username: "",
-        introduction: "",
-        header_icon: "",
-        profile_icon: "",
-        isFollowing: false
-      }
+      profile: initialProfile
     };
   },
   components: {
@@ -16685,12 +16686,14 @@ __webpack_require__.r(__webpack_exports__);
     PostTweet: _components_PostTweet__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
   created: function created() {
+    this.clearTweets();
     this.getAccountId();
     this.fetchUserProfile();
   },
   beforeRouteUpdate: function beforeRouteUpdate(to, from, next) {
-    next(); // TODO stateを初期化したい
-
+    this.clearProfile();
+    this.clearTweets();
+    next();
     this.getAccountId();
     this.fetchUserProfile();
     this.$refs.tweets.fetchTweets(this.account_id);
@@ -16725,6 +16728,14 @@ __webpack_require__.r(__webpack_exports__);
       };
 
       _services_http__WEBPACK_IMPORTED_MODULE_3__["http"].get(url, successCB, errorCB);
+    },
+    clearProfile: function clearProfile() {
+      this.profile = initialProfile;
+    },
+    clearTweets: function clearTweets() {
+      this.$store.dispatch("tweet/clearTweets", {
+        page: this.page
+      });
     }
   }
 });
@@ -90063,24 +90074,28 @@ var mutations = {
     var page = _ref2.page,
         tweets = _ref2.tweets;
     state[page].unshift(JSON.parse(tweets));
+  },
+  resetTweets: function resetTweets(state, _ref3) {
+    var page = _ref3.page;
+    state[page] = [];
   }
 };
 var actions = {
   postTweet: function () {
     var _postTweet = _asyncToGenerator(
     /*#__PURE__*/
-    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(context, _ref3) {
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(context, _ref4) {
       var url, data, pageName, clearMessage, isRedirect, successCB, errorCB;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              url = _ref3.url, data = _ref3.data, pageName = _ref3.pageName, clearMessage = _ref3.clearMessage, isRedirect = _ref3.isRedirect;
+              url = _ref4.url, data = _ref4.data, pageName = _ref4.pageName, clearMessage = _ref4.clearMessage, isRedirect = _ref4.isRedirect;
 
               successCB =
               /*#__PURE__*/
               function () {
-                var _ref4 = _asyncToGenerator(
+                var _ref5 = _asyncToGenerator(
                 /*#__PURE__*/
                 _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(response) {
                   return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
@@ -90117,7 +90132,7 @@ var actions = {
                 }));
 
                 return function successCB(_x3) {
-                  return _ref4.apply(this, arguments);
+                  return _ref5.apply(this, arguments);
                 };
               }();
 
@@ -90142,9 +90157,9 @@ var actions = {
 
     return postTweet;
   }(),
-  fetchTweets: function fetchTweets(context, _ref5) {
-    var url = _ref5.url,
-        page = _ref5.page;
+  fetchTweets: function fetchTweets(context, _ref6) {
+    var url = _ref6.url,
+        page = _ref6.page;
 
     var successCB = function successCB(response) {
       return context.commit('setTweet', {
@@ -90158,6 +90173,12 @@ var actions = {
     };
 
     _services_http__WEBPACK_IMPORTED_MODULE_1__["http"].get(url, successCB, errorCB);
+  },
+  clearTweets: function clearTweets(context, _ref7) {
+    var page = _ref7.page;
+    context.commit('resetTweets', {
+      page: page
+    });
   }
 };
 /* harmony default export */ __webpack_exports__["default"] = ({
