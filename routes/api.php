@@ -35,6 +35,9 @@ Route::middleware('auth:api')->namespace('Api')->group(function () {
 
             Route::get("/", "TweetController@index")->name("api.get_tweets");
             Route::get("/{tweet_id}", "TweetController@showTweet")->name("api.get_tweet");
+
+            Route::put("/{tweet_id}/like", "TweetController@like")->name("api.like_tweet");
+            Route::delete("/{tweet_id}/unlike", "TweetController@unlike")->name("api.unlike_tweet");
         });
     });
 });

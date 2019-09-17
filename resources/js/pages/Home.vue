@@ -1,8 +1,8 @@
 <template>
   <div>
     <h1>Home</h1>
-    <PostTweet :pageName="page" />
-    <TweetsList :query="query" :page="page" :account_id="account_id" />
+    <PostTweet />
+    <TweetsList :query="query" :account_id="account_id" />
   </div>
 </template>
 
@@ -16,18 +16,21 @@ export default {
       query: {
         include_relations: 1
       },
-      page: "home",
       account_id: ""
     };
   },
   components: {
     TweetsList,
-    PostTweet,
+    PostTweet
   },
   created() {
+    this.setPage();
     this.setAccountId();
   },
   methods: {
+    setPage() {
+      this.$store.dispatch("user/setPage", { page: "home" });
+    },
     setAccountId() {
       this.account_id = this.$store.state.user.user.account_id;
     }

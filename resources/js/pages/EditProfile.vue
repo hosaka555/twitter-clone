@@ -125,7 +125,7 @@ export default {
       isProcessing: false,
       changeHeaderIcon: 0,
       changeProfileIcon: 0,
-      account_id: '',
+      account_id: ""
     };
   },
   components: {
@@ -136,10 +136,14 @@ export default {
     this.getProfile();
   },
   created() {
+    this.setPage();
     this.getAccountId();
     this.checkCurrentUser();
   },
   methods: {
+    setPage() {
+      this.$store.dispatch("user/setPage", { page: "edit_profile" });
+    },
     checkCurrentUser() {
       if (this.$store.state.user.user.account_id !== this.account_id) {
         this.$router.push({

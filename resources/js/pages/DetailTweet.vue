@@ -23,6 +23,16 @@
           <p>{{ tweet.message }}</p>
         </div>
       </div>
+      <div class="detailTweet-bottom">
+        <div v-if="isReady">
+          <div v-if="index != null">
+            <Likes :index="index" :account_id="account_id" :tweet_id="Number(tweet_id)" />
+          </div>
+          <div v-else>
+            <Likes :tweet="tweet" :account_id="account_id" :tweet_id="Number(tweet_id)" />
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -32,6 +42,8 @@ import { async } from "@/services/http";
 import ProfileIcon from "@/components/ProfileIcon";
 import moment from "moment-timezone";
 import BackButton from "@/components/BackButton";
+import Likes from "@/components/Likes";
+import store from "@/store";
 
 export default {
   data() {
@@ -39,20 +51,31 @@ export default {
       tweet: {},
       account_id: "",
       tweet_id: "",
-      date: ""
+      date: "",
+      isReady: false,
+      index: null
     };
   },
   components: {
     ProfileIcon,
-    BackButton
+    BackButton,
+    Likes
+  },
+  beforeRouteEnter(to, from, next) {
+    store.dispatch("user/setPrevPage", { page: from.name });
+    next();
   },
   async created() {
+    this.setPage();
     this.getAccountId();
     this.getTweetId();
     await this.setTweet();
     this.newDate();
   },
   methods: {
+    setPage() {
+      this.$store.dispatch("user/setPage", { page: "detail_tweet" });
+    },
     getAccountId() {
       let pattern = /users\/(.+?)\//;
       let targetUrl = decodeURI(window.location.pathname);
@@ -68,6 +91,8 @@ export default {
     async setTweet() {
       if (this.$route.params.tweet) {
         this.tweet = this.$route.params.tweet;
+        this.index = this.$route.params.index;
+        this.isReady = true;
         return;
       }
 
@@ -79,7 +104,9 @@ export default {
         console.log(error);
       };
 
-      await async.get(url, successCB, errorCB);
+      const afterCB = () => (this.isReady = true);
+
+      await async.get(url, successCB, errorCB, afterCB);
     },
     newDate() {
       let date = moment(new Date(this.tweet.created_at));
@@ -87,6 +114,14 @@ export default {
       date.tz("Asia/Tokyo");
 
       this.date = date.fromNow();
+    },
+    getIndex(tweet) {
+      const page = this.$store.state.user.page;
+      const index = this.$store.state[page].tweets.findIndex(
+        value => value.id === tweet.id
+      );
+
+      this.index = index;
     }
   }
 };

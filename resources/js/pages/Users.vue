@@ -21,10 +21,14 @@ export default {
     ShowUser
   },
   created() {
+    this.setPage();
     this.fetchUsers();
     this.fetchFollowees();
   },
   methods: {
+    setPage() {
+      this.$store.dispatch("user/setPage", { page: "users" });
+    },
     fetchUsers() {
       const url = `/api/users`;
       const successCB = response => {

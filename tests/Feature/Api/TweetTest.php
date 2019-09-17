@@ -63,7 +63,7 @@ class TweetTest extends TestCase
         $response = $this->actingAs($user)->get(route_with_query("api.get_tweets", ["account_id" => $user->account_id], ["include_relations" => 0]));
 
         $response->assertStatus(200);
-        $this->assertSame(Tweet::where("user_id", $user->id)->get()->toJson(), $response->original);
+        $this->assertSame(Tweet::where("user_id", $user->id)->with('likes')->get()->toJson(), $response->original);
     }
 
     public function test_get_a_tweet()
@@ -74,7 +74,7 @@ class TweetTest extends TestCase
             $tweet = factory(Tweet::class)->make();
             $user->tweets()->save($tweet);
         });
-        $tweet = $user->tweets->first();
+        $tweet = $user->tweets()->with('likes')->first();
         $response = $this->actingAs($user)->get(route_with_query("api.get_tweet", [
             "account_id" => $user->account_id,
             "tweet_id" => $tweet->id
@@ -111,7 +111,7 @@ class TweetTest extends TestCase
         $response = $this->actingAs($user)->get(route_with_query("api.get_tweets", ["account_id" => $user->account_id], ["include_relations" => 1]));
 
         $response->assertStatus(200);
-        $tweets = Tweet::whereIn('user_id', [$user->id, $general_user->id])->orderBy('created_at', 'desc')->get();
+        $tweets = Tweet::whereIn('user_id', [$user->id, $general_user->id])->with('likes')->orderBy('created_at', 'desc')->get();
         $this->assertSame(json_encode($tweets), $response->original);
     }
 }

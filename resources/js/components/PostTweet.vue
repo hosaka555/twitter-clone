@@ -23,10 +23,6 @@ import ProfileIcon from "./ProfileIcon";
 
 export default {
   props: {
-    pageName: {
-      type: String,
-      default: "home"
-    },
     isRedirect:{
       type: Boolean,
       default: false
@@ -56,14 +52,12 @@ export default {
         this.isProcessing = true;
         const url = `/api/users/${this.$store.state.user.user.account_id}/tweets/tweet`;
         const data = { message: this.message };
-        const pageName = this.pageName;
         const clearMessage = () => this.message = "";
         const isRedirect = this.isRedirect;
 
         await this.$store.dispatch("tweet/postTweet", {
           url,
           data,
-          pageName,
           clearMessage,
           isRedirect
         });

@@ -2,17 +2,29 @@ import { async } from '@/services/http';
 
 const initialState = {
   token: null,
-  user: null
+  user: null,
+  page: "home",
+  prevPage: null,
 };
 
 const state = () => Object.assign({}, initialState);
 
 const getters = {
   token: state => state.token,
-  me: state => state.user
+  me: state => state.user,
+  prevPage: state => {
+    let page = state.prevPage;
+    if (!["home", "profile"].includes(page)) {
+      page = null;
+    }
+    return page;
+  }
 };
 
 const mutations = {
+  setPage(state, { page }) {
+    state.page = page;
+  },
   setToken(state, token) {
     state.token = token;
   },
@@ -25,10 +37,16 @@ const mutations = {
         state[key] = initialState[key];
       }
     }
+  },
+  setPrevPage(state, { page: page }) {
+    state.prevPage = page;
   }
 };
 
 const actions = {
+  async setPage(context, { page }) {
+    context.commit('setPage', { page: page });
+  },
   async setToken(context, { token }) {
     context.commit('setToken', token);
     console.log("Finitsh set token.\n" + token);
@@ -76,6 +94,9 @@ const actions = {
 
     await async.post('/logout', '', successCB, errorCB, afterCB);
   },
+  setPrevPage(context, { page }) {
+    context.commit('setPrevPage', { page: page });
+  }
 };
 
 export default {

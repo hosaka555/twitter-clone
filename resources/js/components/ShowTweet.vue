@@ -14,7 +14,7 @@
       </div>
     </div>
     <router-link
-      :to="{name: 'detail-tweet',params:{account_id: tweet.account_id,tweet_id: tweet.id,tweet: tweet}}"
+      :to="{name: 'detail-tweet',params:{account_id: tweet.account_id,tweet_id: tweet.id,tweet: tweet, index: index}}"
     >
       <div class="tweet-body">
         <div class="tweet-body__message">
@@ -22,16 +22,24 @@
         </div>
       </div>
     </router-link>
+    <div class="tweet-bottom">
+      <Likes :index="index" :account_id="tweet.account_id" :tweet_id="tweet.id" />
+    </div>
   </div>
 </template>
 
 <script>
 import ProfileIcon from "@/components/ProfileIcon";
 import moment from "moment-timezone";
+import Likes from "@/components/Likes";
 
 export default {
   props: {
-    tweet: Object
+    tweet: Object,
+    index: {
+      type: Number,
+      required: true
+    }
   },
   data() {
     return {
@@ -39,7 +47,8 @@ export default {
     };
   },
   components: {
-    ProfileIcon
+    ProfileIcon,
+    Likes
   },
   methods: {
     newDate() {

@@ -8,7 +8,7 @@ class Tweet extends Model
 {
     protected $fillable = ["message", "user_id"];
 
-    protected $appends = ['account_id', "profile_icon", "username"];
+    protected $appends = ['account_id', "profile_icon", "username", "is_liked","likes_count"];
 
     public function user()
     {
@@ -28,5 +28,22 @@ class Tweet extends Model
     public function getUsernameAttribute()
     {
         return $this->user->profile->username;
+    }
+
+    public function getIsLikedAttribute()
+    {
+        return $this->likes->contains(function ($user) {
+            return $user->id === auth()->user()->id;
+        });
+    }
+
+    public function getLikesCountAttribute()
+    {
+        return $this->likes->count();
+    }
+
+    public function likes()
+    {
+        return $this->belongsToMany('App\User', 'likes');
     }
 }

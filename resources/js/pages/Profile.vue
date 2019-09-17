@@ -8,10 +8,10 @@
     />
 
     <div v-if="currentUser()">
-      <PostTweet :pageName="page" />
+      <PostTweet />
     </div>
 
-    <TweetsList :query="query" :page="page" :account_id="account_id" ref="tweets" />
+    <TweetsList :query="query" :account_id="account_id" ref="tweets" />
   </div>
 </template>
 
@@ -34,7 +34,6 @@ export default {
       query: {
         include_relations: 0
       },
-      page: "profile",
       profile: initialProfile
     };
   },
@@ -44,6 +43,7 @@ export default {
     PostTweet
   },
   created() {
+    this.setPage();
     this.clearTweets();
     this.getAccountId();
     this.fetchUserProfile();
@@ -58,6 +58,9 @@ export default {
     this.$refs.tweets.fetchTweets(this.account_id);
   },
   methods: {
+    setPage() {
+      this.$store.dispatch("user/setPage", { page: "profile" });
+    },
     getAccountId() {
       let pattern = /users\/(.+)/;
       let targetUrl = decodeURI(window.location.pathname);
@@ -87,7 +90,7 @@ export default {
       this.profile = initialProfile;
     },
     clearTweets() {
-      this.$store.dispatch("tweet/clearTweets", { page: this.page });
+      this.$store.dispatch("tweet/clearTweets");
     }
   }
 };

@@ -22,14 +22,14 @@ class TweetController extends Controller
             $q = 0;
         }
 
-        $tweets = User::where('account_id', $account_id)->firstOrFail()->tweets($q)->get()->toJson();
+        $tweets = User::where('account_id', $account_id)->firstOrFail()->tweets($q)->with('likes')->get()->toJson();
 
         return response()->json($tweets, 200);
     }
 
     public function showTweet($account_id, $tweet_id)
     {
-        $tweet = Tweet::where('id', $tweet_id)->firstOrFail()->toJson();
+        $tweet = Tweet::where('id', $tweet_id)->with('likes')->firstOrFail()->toJson();
         return response()->json($tweet, 200);
     }
 
@@ -40,5 +40,21 @@ class TweetController extends Controller
         Auth::user()->tweets()->save($tweet);
 
         return response()->json($data = $tweet->toJson(), 200);
+    }
+
+    public function like($account_id,$tweet_id)
+    {
+        $tweet = Tweet::where('id',$tweet_id)->with('likes')->firstOrFail();
+
+        $tweet->likes()->sync([auth()->user()->id], false);
+        return response()->json([],204);
+    }
+
+    public function unlike($account_id,$tweet_id)
+    {
+        $tweet = Tweet::where('id',$tweet_id)->with('likes')->firstOrFail();
+
+        $tweet->likes()->detach(auth()->user()->id);
+        return response()->json([],204);
     }
 }
