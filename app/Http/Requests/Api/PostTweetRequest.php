@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Requests\Api;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -25,7 +26,15 @@ class PostTweetRequest extends FormRequest
     public function rules()
     {
         return [
-            "message" => "required | max:140"
+            "message" => "required | max:140",
+            "images" => [
+                "array",
+                function ($attribute, $images, $fail) {
+                    if (count($images) > 4) {
+                        return $fail("投稿できる画像は4個までです");
+                    }
+                }
+            ]
         ];
     }
 

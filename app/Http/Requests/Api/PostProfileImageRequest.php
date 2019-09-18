@@ -43,7 +43,7 @@ class PostProfileImageRequest extends FormRequest
         return $this->all();
     }
 
-    public function fileNotExists($file)
+    private function fileNotExists($file)
     {
         return !$file;
     }

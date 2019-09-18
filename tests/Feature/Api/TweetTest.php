@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use App\Profile;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class TweetTest extends TestCase
 {
@@ -113,5 +115,64 @@ class TweetTest extends TestCase
         $response->assertStatus(200);
         $tweets = Tweet::whereIn('user_id', [$user->id, $general_user->id])->with('likes')->orderBy('created_at', 'desc')->get();
         $this->assertSame(json_encode($tweets), $response->original);
+    }
+
+    public function test_user_can_post_tweet_with_four_images()
+    {
+        $user = tap(factory(User::class)->create(), function ($user) {
+            $profile = factory(Profile::class)->make();
+            $user->profile()->save($profile);
+        });
+        $tweet = factory(Tweet::class, "test")->make();
+        Storage::fake();
+        $images = [];
+        for ($i = 0; $i < 4; $i++) {
+            $images[] = UploadedFile::fake()->image('image{$i}.jpg');
+        }
+
+        $response = $this->actingAs($user)->post(route("api.post_tweet", ["account_id" => $user->account_id]), [
+            "message" => $tweet->message,
+            "images" => $images
+        ]);
+
+        $response->assertStatus(200);
+
+        $expected_tweet = Tweet::first();
+        $this->assertDatabaseHas("tweets", ["message" => $expected_tweet->message]);
+        $this->assertSame(4, $expected_tweet->images->count());
+
+        $pattern = '/^(.+)$/';
+
+        foreach (\App\TweetImage::all() as $index => $image) {
+            preg_match($pattern, $image->filename, $mathces);
+            $filename = $mathces[1];
+            Storage::cloud()->assertExists("images/tweet/" . $filename);
+            Storage::cloud()->delete("images/tweet/" . $filename);
+        }
+    }
+
+    public function test_will_be_invalid_more_than_five_images()
+    {
+        $this->withExceptionHandling();
+
+        $user = tap(factory(User::class)->create(), function ($user) {
+            $profile = factory(Profile::class)->make();
+            $user->profile()->save($profile);
+        });
+        $tweet = factory(Tweet::class, "test")->make();
+        Storage::fake();
+        $images = [];
+        for ($i = 0; $i < 5; $i++) {
+            $images[] = UploadedFile::fake()->image('image{$i}.jpg');
+        }
+
+        $response = $this->actingAs($user)->post(route("api.post_tweet", ["account_id" => $user->account_id]), [
+            "message" => $tweet->message,
+            "images" => $images
+        ]);
+
+        $response->assertStatus(422);
+
+        $this->assertDatabaseMissing("tweets", ["message" => $tweet->message]);
     }
 }
