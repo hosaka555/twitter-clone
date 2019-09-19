@@ -15934,6 +15934,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _ProfileIcon__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ProfileIcon */ "./resources/js/components/ProfileIcon.vue");
+/* harmony import */ var _ShowImage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ShowImage */ "./resources/js/components/ShowImage.vue");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -15960,6 +15961,46 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
@@ -15972,17 +16013,46 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     return {
       message: "",
       countOver: false,
-      isProcessing: false
+      isProcessing: false,
+      imagesData: [],
+      previewImages: []
     };
   },
   components: {
-    ProfileIcon: _ProfileIcon__WEBPACK_IMPORTED_MODULE_1__["default"]
+    ProfileIcon: _ProfileIcon__WEBPACK_IMPORTED_MODULE_1__["default"],
+    ShowImage: _ShowImage__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
   computed: {
     restOfCount: function restOfCount() {
       var count = 140 - this.message.length;
       this.countOver = count < 0 ? true : false;
       return count;
+    },
+    imagesCount: function imagesCount() {
+      return this.imagesData.length;
+    },
+    imageClass: function imageClass() {
+      switch (this.imagesCount) {
+        case 1:
+          return "tweet__image--one";
+          break;
+
+        case 2:
+          return "tweet__image--two";
+          break;
+
+        case 3:
+          return "tweet__image--three";
+          break;
+
+        case 4:
+          return "tweet__image--four";
+          break;
+
+        default:
+          return "";
+          break;
+      }
     }
   },
   methods: {
@@ -15992,39 +16062,43 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
         var _this = this;
 
-        var url, data, clearMessage, isRedirect;
+        var url, data, clearState, isRedirect;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 if (!(!this.countOver && !this.isProcessing)) {
-                  _context.next = 9;
+                  _context.next = 11;
                   break;
                 }
 
                 this.isProcessing = true;
                 url = "/api/users/".concat(this.$store.state.user.user.account_id, "/tweets/tweet");
-                data = {
-                  message: this.message
-                };
+                data = new FormData();
+                data.append("message", this.message);
+                this.imagesData.forEach(function (v, i) {
+                  return data.append("images[]", v);
+                });
 
-                clearMessage = function clearMessage() {
-                  return _this.message = "";
+                clearState = function clearState() {
+                  _this.message = "";
+                  _this.imagesData = [];
+                  _this.previewImages = [];
                 };
 
                 isRedirect = this.isRedirect;
-                _context.next = 8;
+                _context.next = 10;
                 return this.$store.dispatch("tweet/postTweet", {
                   url: url,
                   data: data,
-                  clearMessage: clearMessage,
+                  clearState: clearState,
                   isRedirect: isRedirect
                 });
 
-              case 8:
+              case 10:
                 this.isProcessing = false;
 
-              case 9:
+              case 11:
               case "end":
                 return _context.stop();
             }
@@ -16040,6 +16114,26 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }(),
     getAuthUserIcon: function getAuthUserIcon() {
       return this.$store.getters["profile/profile_icon"];
+    },
+    addImage: function addImage(e) {
+      var file = e.target.files[0];
+      this.createImage(file);
+      this.imagesData.push(file);
+    },
+    createImage: function createImage(file) {
+      var _this2 = this;
+
+      var reader = new FileReader(file);
+
+      reader.onload = function (e) {
+        _this2.previewImages.push(e.target.result);
+      };
+
+      reader.readAsDataURL(file);
+    },
+    deleteImage: function deleteImage(index) {
+      this.imagesData.splice(index, 1);
+      this.previewImages.splice(index, 1);
     }
   }
 });
@@ -16062,6 +16156,31 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     userIcon: String
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ShowImage.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ShowImage.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    uri: {
+      type: String,
+      required: true
+    }
   }
 });
 
@@ -16143,6 +16262,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment_timezone__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! moment-timezone */ "./node_modules/moment-timezone/index.js");
 /* harmony import */ var moment_timezone__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(moment_timezone__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _components_Likes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/components/Likes */ "./resources/js/components/Likes.vue");
+/* harmony import */ var _components_ShowImage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/components/ShowImage */ "./resources/js/components/ShowImage.vue");
 //
 //
 //
@@ -16173,6 +16293,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -16191,7 +16320,33 @@ __webpack_require__.r(__webpack_exports__);
   },
   components: {
     ProfileIcon: _components_ProfileIcon__WEBPACK_IMPORTED_MODULE_0__["default"],
-    Likes: _components_Likes__WEBPACK_IMPORTED_MODULE_2__["default"]
+    Likes: _components_Likes__WEBPACK_IMPORTED_MODULE_2__["default"],
+    ShowImage: _components_ShowImage__WEBPACK_IMPORTED_MODULE_3__["default"]
+  },
+  computed: {
+    imageClass: function imageClass() {
+      switch (this.tweet.image_url_lists.length) {
+        case 1:
+          return "tweet__image--one";
+          break;
+
+        case 2:
+          return "tweet__image--two";
+          break;
+
+        case 3:
+          return "tweet__image--three";
+          break;
+
+        case 4:
+          return "tweet__image--four";
+          break;
+
+        default:
+          return "";
+          break;
+      }
+    }
   },
   methods: {
     newDate: function newDate() {
@@ -16323,6 +16478,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_BackButton__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/components/BackButton */ "./resources/js/components/BackButton.vue");
 /* harmony import */ var _components_Likes__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/components/Likes */ "./resources/js/components/Likes.vue");
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/store */ "./resources/js/store/index.js");
+/* harmony import */ var _components_ShowImage__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/components/ShowImage */ "./resources/js/components/ShowImage.vue");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -16368,6 +16524,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -16388,7 +16556,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   components: {
     ProfileIcon: _components_ProfileIcon__WEBPACK_IMPORTED_MODULE_2__["default"],
     BackButton: _components_BackButton__WEBPACK_IMPORTED_MODULE_4__["default"],
-    Likes: _components_Likes__WEBPACK_IMPORTED_MODULE_5__["default"]
+    Likes: _components_Likes__WEBPACK_IMPORTED_MODULE_5__["default"],
+    ShowImage: _components_ShowImage__WEBPACK_IMPORTED_MODULE_7__["default"]
   },
   beforeRouteEnter: function beforeRouteEnter(to, from, next) {
     _store__WEBPACK_IMPORTED_MODULE_6__["default"].dispatch("user/setPrevPage", {
@@ -16427,6 +16596,31 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
     return created;
   }(),
+  computed: {
+    imageClass: function imageClass() {
+      switch (this.tweet.image_url_lists.length) {
+        case 1:
+          return "tweet__image--one";
+          break;
+
+        case 2:
+          return "tweet__image--two";
+          break;
+
+        case 3:
+          return "tweet__image--three";
+          break;
+
+        case 4:
+          return "tweet__image--four";
+          break;
+
+        default:
+          return "";
+          break;
+      }
+    }
+  },
   methods: {
     setPage: function setPage() {
       this.$store.dispatch("user/setPage", {
@@ -71861,6 +72055,91 @@ var render = function() {
               [_vm._v("投稿")]
             )
           ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "newTweet-imagesBox" }, [
+          _vm.previewImages.length
+            ? _c(
+                "div",
+                { staticClass: "newTweet-imagesBox--if" },
+                _vm._l(_vm.previewImages, function(image, index) {
+                  return _c(
+                    "div",
+                    { key: index, staticClass: "newTweet-imagesBox__wrapper" },
+                    [
+                      _c(
+                        "div",
+                        { staticClass: "newTweet-imagesBox__image" },
+                        [
+                          _c("ShowImage", {
+                            class: _vm.imageClass,
+                            attrs: { uri: image }
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            {
+                              staticClass:
+                                "newTweet-imagesBox__button newTweet-imagesBox__button--delete",
+                              on: {
+                                click: function($event) {
+                                  return _vm.deleteImage(index)
+                                }
+                              }
+                            },
+                            [
+                              _c("font-awesome-icon", {
+                                staticClass: "newTweet-imagesBox__icon--delete",
+                                class: {
+                                  "newTweet-imagesBox__icon--delete--one":
+                                    _vm.imagesCount === 1
+                                },
+                                attrs: { icon: "times-circle" }
+                              })
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      )
+                    ]
+                  )
+                }),
+                0
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.imagesCount < 4
+            ? _c("div", { staticClass: "newTweet-imagesBox--if" }, [
+                _c("label", { attrs: { for: "tweet_image" } }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "newTweet-imagesBox__button newTweet-imagesBox__button--select"
+                    },
+                    [
+                      _c("font-awesome-icon", {
+                        staticClass: "newTweet-imagesBox__icon--plus",
+                        attrs: { icon: "plus-circle" }
+                      })
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c("span", [_vm._v("画像の追加")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    attrs: {
+                      type: "file",
+                      id: "tweet_image",
+                      accept: ".jpg, .png, image/jpeg, image/png"
+                    },
+                    on: { change: _vm.addImage }
+                  })
+                ])
+              ])
+            : _vm._e()
         ])
       ],
       1
@@ -71893,6 +72172,30 @@ var render = function() {
     staticClass: "icon profile-icon",
     attrs: { src: _vm.userIcon }
   })
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ShowImage.vue?vue&type=template&id=59ad00fa&":
+/*!************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ShowImage.vue?vue&type=template&id=59ad00fa& ***!
+  \************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("img", { staticClass: "tweet__image", attrs: { src: _vm.uri } })
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -72096,20 +72399,43 @@ var render = function() {
         ]
       ),
       _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "tweet-bottom" },
-        [
-          _c("Likes", {
-            attrs: {
-              index: _vm.index,
-              account_id: _vm.tweet.account_id,
-              tweet_id: _vm.tweet.id
-            }
-          })
-        ],
-        1
-      )
+      _c("div", { staticClass: "tweet-bottom" }, [
+        _c(
+          "div",
+          { staticClass: "tweet-bottom__likes" },
+          [
+            _c("Likes", {
+              attrs: {
+                index: _vm.index,
+                account_id: _vm.tweet.account_id,
+                tweet_id: _vm.tweet.id
+              }
+            })
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _vm.tweet.image_url_lists.length
+          ? _c(
+              "div",
+              { staticClass: "tweet-bottom--if" },
+              _vm._l(_vm.tweet.image_url_lists, function(url, index) {
+                return _c(
+                  "div",
+                  { key: index, staticClass: "tweet-bottom__images" },
+                  [
+                    _c("ShowImage", {
+                      class: _vm.imageClass,
+                      attrs: { uri: url }
+                    })
+                  ],
+                  1
+                )
+              }),
+              0
+            )
+          : _vm._e()
+      ])
     ],
     1
   )
@@ -72337,6 +72663,29 @@ var render = function() {
                       1
                     )
               ])
+            : _vm._e()
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "tweet-bottom" }, [
+          _vm.tweet.image_url_lists
+            ? _c(
+                "div",
+                { staticClass: "tweet-bottom--if" },
+                _vm._l(_vm.tweet.image_url_lists, function(url, index) {
+                  return _c(
+                    "div",
+                    { key: index, staticClass: "tweet-bottom__images" },
+                    [
+                      _c("ShowImage", {
+                        class: _vm.imageClass,
+                        attrs: { uri: url }
+                      })
+                    ],
+                    1
+                  )
+                }),
+                0
+              )
             : _vm._e()
         ])
       ])
@@ -89486,6 +89835,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/ShowImage.vue":
+/*!***********************************************!*\
+  !*** ./resources/js/components/ShowImage.vue ***!
+  \***********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ShowImage_vue_vue_type_template_id_59ad00fa___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ShowImage.vue?vue&type=template&id=59ad00fa& */ "./resources/js/components/ShowImage.vue?vue&type=template&id=59ad00fa&");
+/* harmony import */ var _ShowImage_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ShowImage.vue?vue&type=script&lang=js& */ "./resources/js/components/ShowImage.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ShowImage_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ShowImage_vue_vue_type_template_id_59ad00fa___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ShowImage_vue_vue_type_template_id_59ad00fa___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/ShowImage.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/ShowImage.vue?vue&type=script&lang=js&":
+/*!************************************************************************!*\
+  !*** ./resources/js/components/ShowImage.vue?vue&type=script&lang=js& ***!
+  \************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ShowImage_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./ShowImage.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ShowImage.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ShowImage_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/ShowImage.vue?vue&type=template&id=59ad00fa&":
+/*!******************************************************************************!*\
+  !*** ./resources/js/components/ShowImage.vue?vue&type=template&id=59ad00fa& ***!
+  \******************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ShowImage_vue_vue_type_template_id_59ad00fa___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./ShowImage.vue?vue&type=template&id=59ad00fa& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ShowImage.vue?vue&type=template&id=59ad00fa&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ShowImage_vue_vue_type_template_id_59ad00fa___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ShowImage_vue_vue_type_template_id_59ad00fa___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/ShowProfile.vue":
 /*!*************************************************!*\
   !*** ./resources/js/components/ShowProfile.vue ***!
@@ -90704,12 +91122,12 @@ var actions = {
     var _postTweet = _asyncToGenerator(
     /*#__PURE__*/
     _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(context, _ref8) {
-      var url, data, clearMessage, isRedirect, page, successCB, errorCB;
+      var url, data, clearState, isRedirect, page, successCB, errorCB;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              url = _ref8.url, data = _ref8.data, clearMessage = _ref8.clearMessage, isRedirect = _ref8.isRedirect;
+              url = _ref8.url, data = _ref8.data, clearState = _ref8.clearState, isRedirect = _ref8.isRedirect;
               page = getPage(context.rootState.user.page);
 
               successCB =
@@ -90741,7 +91159,7 @@ var actions = {
                             page: page,
                             tweets: response.data
                           });
-                          clearMessage();
+                          clearState();
 
                         case 7:
                         case "end":

@@ -65,7 +65,7 @@ class TweetTest extends TestCase
         $response = $this->actingAs($user)->get(route_with_query("api.get_tweets", ["account_id" => $user->account_id], ["include_relations" => 0]));
 
         $response->assertStatus(200);
-        $this->assertSame(Tweet::where("user_id", $user->id)->with('likes')->get()->toJson(), $response->original);
+        $this->assertSame(Tweet::where("user_id", $user->id)->with('likes', 'images')->get()->toJson(), $response->original);
     }
 
     public function test_get_a_tweet()
@@ -76,7 +76,7 @@ class TweetTest extends TestCase
             $tweet = factory(Tweet::class)->make();
             $user->tweets()->save($tweet);
         });
-        $tweet = $user->tweets()->with('likes')->first();
+        $tweet = $user->tweets()->with('likes', 'images')->first();
         $response = $this->actingAs($user)->get(route_with_query("api.get_tweet", [
             "account_id" => $user->account_id,
             "tweet_id" => $tweet->id
@@ -113,7 +113,7 @@ class TweetTest extends TestCase
         $response = $this->actingAs($user)->get(route_with_query("api.get_tweets", ["account_id" => $user->account_id], ["include_relations" => 1]));
 
         $response->assertStatus(200);
-        $tweets = Tweet::whereIn('user_id', [$user->id, $general_user->id])->with('likes')->orderBy('created_at', 'desc')->get();
+        $tweets = Tweet::whereIn('user_id', [$user->id, $general_user->id])->with('likes', 'images')->orderBy('created_at', 'desc')->get();
         $this->assertSame(json_encode($tweets), $response->original);
     }
 
@@ -149,6 +149,35 @@ class TweetTest extends TestCase
             Storage::cloud()->assertExists("images/tweet/" . $filename);
             Storage::cloud()->delete("images/tweet/" . $filename);
         }
+    }
+
+    public function test_user_can_get_tweet_with_images()
+    {
+        $images = [];
+
+        $user = tap(factory(User::class)->create(), function ($user) {
+            $profile = factory(Profile::class)->make();
+            $user->profile()->save($profile);
+            $tweet = factory(Tweet::class, "test")->make();
+            $user->tweets()->save($tweet);
+        });
+
+        Storage::fake();
+        $images = [];
+        for ($i = 0; $i < 4; $i++) {
+            UploadedFile::fake()->image($fileName = 'image' . $i . '.jpg');
+            $images[] = ["filename" => $fileName];
+        }
+
+        UploadedFile::fake()->image($fileName = 'image{$i}.jpg');
+
+        $tweet = Tweet::first();
+        $tweet->images()->createMany($images);
+
+        $response = $this->actingAs($user)->get(route_with_query("api.get_tweets", ["account_id" => $user->account_id], ["include_relations" => 0]));
+
+        $response->assertStatus(200);
+        $this->assertSame(Tweet::where("user_id", $user->id)->with('likes', 'images')->get()->toJson(), $response->original);
     }
 
     public function test_will_be_invalid_more_than_five_images()
