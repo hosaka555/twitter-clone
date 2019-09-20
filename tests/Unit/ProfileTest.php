@@ -38,7 +38,7 @@ class ProfileTest extends TestCase
             $user->profile()->save($profile);
         });
 
-        $this->assertSame(env('MINIO_ENDPOINT').'/data/images/profileIcon/custom_profile.png', $user->profile->profile_icon);
+        $this->assertSame(env('AWS_ENDPOINT').'/data/images/profileIcon/custom_profile.png', $user->profile->profile_icon);
     }
 
     public function test_return_user_header_icon()
@@ -49,6 +49,6 @@ class ProfileTest extends TestCase
             $user->profile()->save($profile);
         });
 
-        $this->assertSame(env('MINIO_ENDPOINT').'/data/images/headerIcon/custom_header.png', $user->profile->header_icon);
+        $this->assertSame(env('AWS_ENDPOINT').'/data/images/headerIcon/custom_header.png', $user->profile->header_icon);
     }
 }

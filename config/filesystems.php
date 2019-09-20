@@ -62,7 +62,7 @@ return [
             'region' => env('AWS_DEFAULT_REGION'),
             'bucket' => env('AWS_BUCKET'),
             'url' => env('AWS_URL'),
-            'endpoint' => env('MINIO_ENDPOINT', 'http://localhost:9000'),
+            'endpoint' => env('AWS_ENDPOINT',null),
             'use_path_style_endpoint' => true,
         ],
     ],

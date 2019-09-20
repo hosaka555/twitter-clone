@@ -27,6 +27,6 @@ class UserTest extends TestCase
         $profile = factory(Profile::class)->make(["profile_icon" => "test.png"]);
         $user->profile()->save($profile);
 
-        $this->assertSame(env('MINIO_ENDPOINT').'/data/images/profileIcon/test.png', $user->profile_icon);
+        $this->assertSame(env('AWS_ENDPOINT').'/data/images/profileIcon/test.png', $user->profile_icon);
     }
 }

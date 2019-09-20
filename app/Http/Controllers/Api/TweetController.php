@@ -38,9 +38,12 @@ class TweetController extends Controller
     {
         $tweet_attr = ["message" => $request->message];
         $tweet = new Tweet($tweet_attr);
+
+        DB::beginTransaction();
         Auth::user()->tweets()->save($tweet);
 
         if (!$images = $request->images) {
+            DB::commit();
             return response()->json($data = $tweet->toJson(), 200);
         }
 
@@ -51,7 +54,6 @@ class TweetController extends Controller
             Storage::cloud()->putFileAs('images/tweet', $image, $tweetImage->filename, 'public');
         }
 
-        DB::beginTransaction();
         try {
             $tweet->images()->createMany($fileNameLists);
 
