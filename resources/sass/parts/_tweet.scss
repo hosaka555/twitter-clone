@@ -6,7 +6,7 @@
     border: solid 1px rgb(242, 242, 242);
     padding: 10px;
 
-    & a{
+    & a {
       text-decoration: none;
       color: black;
     }
@@ -34,5 +34,41 @@
   &-head {
     display: inline-block;
     vertical-align: top;
+  }
+
+  &__image {
+    max-height: 400px;
+    display: inline-block;
+    margin-bottom: 15px;
+    &--one {
+      width: 100%;
+    }
+
+    &--two {
+      width: 49%;
+    }
+
+    &--three {
+      width: 49%;
+      height: 50%;
+    }
+
+    &--four {
+      width: 49%;
+      height: 50%;
+    }
+  }
+
+  &-bottom {
+    &--if {
+      display: inline;
+    }
+
+    &__images {
+      display: inline;
+      background: white;
+      margin: 50px 0;
+      border-top: 1px dashed;
+    }
   }
 }

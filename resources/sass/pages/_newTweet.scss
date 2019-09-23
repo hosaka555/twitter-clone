@@ -1,7 +1,10 @@
+@mixin actionIcon {
+  font-size: 3rem;
+}
 .newTweet {
   &-container {
     background: white;
-    height: 220px;
+    min-height: 220px;
     max-width: 1110px;
     padding: 15px 0;
   }
@@ -31,6 +34,53 @@
 
       & .countover {
         color: red;
+      }
+    }
+  }
+
+  &-imagesBox {
+    max-height: 600px;
+    input[type="file"] {
+      display: none;
+    }
+
+    &--if {
+      display: inline;
+    }
+
+    &__wrapper {
+      display: inline;
+      background: white;
+      margin: 50px 0 400px 0;
+      border-top: 1px dashed;
+    }
+
+    &__image {
+      position: relative;
+      display: inline;
+    }
+
+    &__button {
+      display: inline-block;
+      // position: relative;
+    }
+
+    &__icon {
+      &--plus {
+        @include actionIcon;
+      }
+
+      &--delete {
+        @include actionIcon;
+
+        position: absolute;
+        top: -160px;
+        right: 10px;
+
+        &--one {
+          top: -160px;
+          right: -1050px;
+        }
       }
     }
   }

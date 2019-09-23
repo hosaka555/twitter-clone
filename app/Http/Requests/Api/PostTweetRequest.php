@@ -34,7 +34,8 @@ class PostTweetRequest extends FormRequest
                         return $fail("投稿できる画像は4個までです");
                     }
                 }
-            ]
+            ],
+            "images.*" => "mimes:jpg,jpeg,png"
         ];
     }
 

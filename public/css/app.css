@@ -13974,6 +13974,41 @@ body {
   vertical-align: top;
 }
 
+.tweet__image {
+  max-height: 400px;
+  display: inline-block;
+  margin-bottom: 15px;
+}
+
+.tweet__image--one {
+  width: 100%;
+}
+
+.tweet__image--two {
+  width: 49%;
+}
+
+.tweet__image--three {
+  width: 49%;
+  height: 50%;
+}
+
+.tweet__image--four {
+  width: 49%;
+  height: 50%;
+}
+
+.tweet-bottom--if {
+  display: inline;
+}
+
+.tweet-bottom__images {
+  display: inline;
+  background: white;
+  margin: 50px 0;
+  border-top: 1px dashed;
+}
+
 .unfollow {
   background: plum;
   color: white;
@@ -13981,7 +14016,7 @@ body {
 
 .newTweet-container {
   background: white;
-  height: 220px;
+  min-height: 220px;
   max-width: 1110px;
   padding: 15px 0;
 }
@@ -14011,6 +14046,50 @@ body {
 
 .newTweet-bottomBox .bottomBox-rightSide .countover {
   color: red;
+}
+
+.newTweet-imagesBox {
+  max-height: 600px;
+}
+
+.newTweet-imagesBox input[type=file] {
+  display: none;
+}
+
+.newTweet-imagesBox--if {
+  display: inline;
+}
+
+.newTweet-imagesBox__wrapper {
+  display: inline;
+  background: white;
+  margin: 50px 0 400px 0;
+  border-top: 1px dashed;
+}
+
+.newTweet-imagesBox__image {
+  position: relative;
+  display: inline;
+}
+
+.newTweet-imagesBox__button {
+  display: inline-block;
+}
+
+.newTweet-imagesBox__icon--plus {
+  font-size: 3rem;
+}
+
+.newTweet-imagesBox__icon--delete {
+  font-size: 3rem;
+  position: absolute;
+  top: -160px;
+  right: 10px;
+}
+
+.newTweet-imagesBox__icon--delete--one {
+  top: -160px;
+  right: -1050px;
 }
 
 .profile-container {

@@ -3,12 +3,17 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Tweet extends Model
 {
     protected $fillable = ["message", "user_id"];
 
-    protected $appends = ['account_id', "profile_icon", "username", "is_liked", "likes_count"];
+    protected $appends = ['account_id', "profile_icon", "username", "is_liked", "likes_count", 'image_url_lists'];
+
+    protected $hidden = [
+        "images", "likes"
+    ];
 
     public function user()
     {
@@ -50,5 +55,18 @@ class Tweet extends Model
     public function images()
     {
         return $this->hasMany('App\TweetImage', 'tweet_id', 'id')->orderBy('id'); // TweetモデルのidをTweetImageモデルのtweet_idに紐づける。
+    }
+
+    public function getImageUrlListsAttribute()
+    {
+        $images = [];
+        $images = $this->images->map(function ($image) {
+            $dirPath = "images/tweet/";
+            if (Storage::cloud()->exists($filePath = $dirPath . $image->filename)) {
+                return Storage::cloud()->url($filePath);
+            }
+        });
+
+        return $images->toArray();
     }
 }

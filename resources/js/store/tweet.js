@@ -60,14 +60,14 @@ const mutations = {
 };
 
 const actions = {
-  async postTweet(context, { url, data, clearMessage, isRedirect }) {
+  async postTweet(context, { url, data, clearState, isRedirect }) {
     const page = getPage(context.rootState.user.page);
     const successCB = async response => {
       if (isRedirect) {
         await router.push({ name: page });
       } else {
         context.commit('addTweet', { page: page, tweets: response.data });
-        clearMessage();
+        clearState();
       }
     };
 

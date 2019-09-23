@@ -23,14 +23,14 @@ class TweetController extends Controller
             $q = 0;
         }
 
-        $tweets = User::where('account_id', $account_id)->firstOrFail()->tweets($q)->with('likes')->get()->toJson();
+        $tweets = User::where('account_id', $account_id)->with('profile')->firstOrFail()->tweets($q)->with('likes', 'images','user.profile')->get()->toJson();
 
         return response()->json($tweets, 200);
     }
 
     public function showTweet($account_id, $tweet_id)
     {
-        $tweet = Tweet::where('id', $tweet_id)->with('likes')->firstOrFail()->toJson();
+        $tweet = Tweet::where('id', $tweet_id)->with('likes', 'images')->firstOrFail()->toJson();
         return response()->json($tweet, 200);
     }
 
@@ -54,6 +54,11 @@ class TweetController extends Controller
         DB::beginTransaction();
         try {
             $tweet->images()->createMany($fileNameLists);
+
+            $tweet = Tweet::where('id', $tweet->id)->with('likes', 'images')->firstOrFail()->toJson();
+
+            DB::commit();
+            return response()->json($data = $tweet, 200);
         } catch (\Exception $exception) {
             foreach ($images as $index => $image) {
                 Storage::cloud()->delete($fileNameLists[$index]['filename']);
