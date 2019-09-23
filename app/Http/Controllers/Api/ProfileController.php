@@ -7,7 +7,7 @@ use App\Profile;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use App\ProfileImage as Image;
+use App\Image;
 use DB;
 use App\Http\Requests\Api\PostProfileImageRequest;
 

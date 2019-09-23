@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ProfileImage extends Model
+class Image extends Model
 {
     public $filename = '';
     private $image = '';

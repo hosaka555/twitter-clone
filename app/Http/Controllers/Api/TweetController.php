@@ -46,7 +46,7 @@ class TweetController extends Controller
 
         $fileNameLists = [];
         foreach ($images as $image) {
-            $tweetImage = new \App\ProfileImage($image);
+            $tweetImage = new \App\Image($image);
             $fileNameLists[] = ['filename' => $tweetImage->filename];
             Storage::cloud()->putFileAs('images/tweet', $image, $tweetImage->filename, 'public');
         }
