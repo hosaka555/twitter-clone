@@ -18,8 +18,8 @@ if (mix.inProduction() && process.env.UPLOAD_S3) {
       basePath: 'app',
       directory: 'public',
       cloudfrontInvalidateOptions: {
-        DistributionId: process.env.CLOUDFRONT_DISTRIBUTION_ID,
-        Items: ['/*'],
+        DistributionId: process.env.MIX_CLOUDFRONT_DISTRIBUTION_ID,
+        Items: ['/app/*'],
       },
     })
   ]
