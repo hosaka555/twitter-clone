@@ -34,6 +34,7 @@ import router from './router';
 let token = document.head.querySelector('meta[name="csrf-token"]');
 
 axios.interceptors.request.use(config => {
+  config.baseURL = process.env.MIX_API_BASER_URL;
   config.headers.Authorization = `Bearer ${store.getters['user/token']}`;
   return config;
 });
