@@ -64,6 +64,7 @@ return [
             'url' => env('AWS_URL'),
             'endpoint' => env('AWS_ENDPOINT',null),
             'use_path_style_endpoint' => true,
+            'url' => env('AWS_CLOUNDFRONT_URL')
         ],
     ],
 
