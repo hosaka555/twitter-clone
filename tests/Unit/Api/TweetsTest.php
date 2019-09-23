@@ -8,6 +8,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\User;
 use App\Tweet;
 use App\Profile;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class TweetsTest extends TestCase
 {
@@ -61,5 +63,34 @@ class TweetsTest extends TestCase
 
         $tweet = Tweet::first();
         $this->assertSame($user->profile->username, $tweet->username);
+    }
+
+    public function test_return_images()
+    {
+        $user = tap(factory(User::class)->create(), function ($user) {
+            $profile = factory(Profile::class)->make();
+            $user->profile()->save($profile);
+            $tweet = factory(Tweet::class, "test")->make();
+            $user->tweets()->save($tweet);
+        });
+
+        Storage::fake();
+        $images = [];
+        for ($i = 0; $i < 4; $i++) {
+            UploadedFile::fake()->image($fileName = 'image' . $i . '.jpg');
+            $images[] = ["filename" => $fileName];
+        }
+
+        UploadedFile::fake()->image($fileName = 'image{$i}.jpg');
+
+        $tweet = Tweet::first();
+        $tweet->images()->createMany($images);
+
+        for ($i = 0; $i < 4; $i++) {
+            $this->assertDatabaseHas('tweet_images', ["filename" => 'image' . $i . '.jpg']);
+        }
+
+        $this->assertSame(4, $tweet->images->count());
+        $this->assertSame($images[0]['filename'],$tweet->images()->first()->filename);
     }
 }

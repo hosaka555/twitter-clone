@@ -8,7 +8,7 @@ class Tweet extends Model
 {
     protected $fillable = ["message", "user_id"];
 
-    protected $appends = ['account_id', "profile_icon", "username", "is_liked","likes_count"];
+    protected $appends = ['account_id', "profile_icon", "username", "is_liked", "likes_count"];
 
     public function user()
     {
@@ -45,5 +45,10 @@ class Tweet extends Model
     public function likes()
     {
         return $this->belongsToMany('App\User', 'likes');
+    }
+
+    public function images()
+    {
+        return $this->hasMany('App\TweetImage', 'tweet_id', 'id')->orderBy('id'); // TweetモデルのidをTweetImageモデルのtweet_idに紐づける。
     }
 }
