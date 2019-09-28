@@ -42,6 +42,8 @@ class Profile extends Model
             'introduction' => $request->request->get('introduction'),
         ];
 
+        if($intro = &$profile_attr['introduction'] === "null") $intro = null;
+
         if (!!$request->changeHeaderIcon && !!$request->changeProfileIcon) {
             $images = [
                 'header_icon' => $headerIconImage->filename,

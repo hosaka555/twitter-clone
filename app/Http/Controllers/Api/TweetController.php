@@ -23,7 +23,7 @@ class TweetController extends Controller
             $q = 0;
         }
 
-        $tweets = User::where('account_id', $account_id)->firstOrFail()->tweets($q)->with('likes', 'images')->get()->toJson();
+        $tweets = User::where('account_id', $account_id)->with('profile')->firstOrFail()->tweets($q)->with('likes', 'images','user.profile')->get()->toJson();
 
         return response()->json($tweets, 200);
     }
