@@ -36,6 +36,8 @@ class TweetController extends Controller
 
     public function create(PostTweetRequest $request)
     {
+        DB::beginTransaction();
+
         $tweet_attr = ["message" => $request->message];
         $tweet = new Tweet($tweet_attr);
 
