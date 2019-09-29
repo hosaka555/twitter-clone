@@ -91,7 +91,7 @@ export default {
       this.processing = false;
     },
     like(hasStore = true) {
-      if (this.processing || this.processing) return;
+      if (this.processing || this.isLikingProcessing) return;
 
       const account_id = this.account_id;
       const tweet_id = this.tweet_id;

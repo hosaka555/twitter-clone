@@ -23,12 +23,14 @@ const mutations = {
       }
     });
   },
-  addTweet(state, { page, tweets }) {
+  addTweet(state, { page, tweet }) {
     if (!["home", "profile"].includes(page)) {
       page = "home";
     }
 
-    state[page].unshift(JSON.parse(tweets));
+    tweet = JSON.parse(tweet);
+    tweet.isLikingProcessing = false;
+    state[page].unshift(tweet);
   },
   resetTweets(state, { page }) {
     state[page] = [];
@@ -66,7 +68,7 @@ const actions = {
       if (isRedirect) {
         await router.push({ name: page });
       } else {
-        context.commit('addTweet', { page: page, tweets: response.data });
+        context.commit('addTweet', { page: page, tweet: response.data });
         clearState();
       }
     };
