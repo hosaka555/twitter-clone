@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 
 class Profile extends Model
 {
+    private $testtest = 333;
     protected $fillable = [
         'username', 'introduction', 'header_icon', 'profile_icon'
     ];
